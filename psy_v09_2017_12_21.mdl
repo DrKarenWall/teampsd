@@ -1,0 +1,2219 @@
+{UTF-8}
+Cohort Ratio=
+	SankeyScalar/"ModelCohort-Total"
+	~	Dmnl
+	~	for Sankey
+	~	:SUPPLEMENTARY 
+	|
+
+"BackAfterThreeMonthy-FromOneVisit"= INTEG (
+	"BackAfterThreeMonthy-FromOneVisitRate",
+		0)
+	~	pt
+	~	For the Sankey
+	|
+
+"BackAfterThreeMonthy-FromOneVisitRate"=
+	IF THEN ELSE(Time>0, "From1-PL3mo into High D"+"From1-PL3mo into Low D"+"From1-PL3mo into Mid D"\
+		,0)
+	~	pt
+	~	For the Sankey
+	|
+
+"2-7WithinThreeMonthsRate"=
+	IF THEN ELSE(Time>0, "Starting Psychotherapy 2-7-n-Done"+"Starting Psychotherapy 2-7-n-More<3mo"\
+		+"Starting Psychotherapy- 2-7-n->3mo",0)
+	~	pt
+	~	For the Sankey
+	|
+
+"8PlusWithinThreeMonths"= INTEG (
+	"8PlusWithinThreeMonthsRate",
+		0)
+	~	pt
+	~	For the Sankey
+	|
+
+"8PlusWithinThreeMonthsRate"=
+	IF THEN ELSE(Time>0,"Starting Psychotherapy 2-7-n-More<3mo",0)
+	~	pt
+	~	For the Sankey
+	|
+
+"BackAfterThreeMonthy-From8Plus"= INTEG (
+	"BackAfterThreeMonthy-From8PlusRate",
+		0)
+	~	pt
+	~	For the Sankey
+	|
+
+"BackAfterThreeMonthy-From8PlusRate"=
+	IF THEN ELSE(Time>0, "Starting Psychotherapy 2-7-n-More<3mo"*(1-"%Visit8PL-n-Done"),\
+		 0)
+	~	pt
+	~	For the Sankey
+	|
+
+OneVisitRate=
+	IF THEN ELSE(Time>0,"Starting Psychotherapy- 1",0)
+	~	pt
+	~		|
+
+"2-7WithinThreeMonths"= INTEG (
+	"2-7WithinThreeMonthsRate",
+		0)
+	~	pt
+	~	For the Sankey
+	|
+
+"BackAfterThreeMonthy-From2-7"= INTEG (
+	"BackAfterThreeMonthy-From2-7Rate",
+		0)
+	~	pt
+	~	For the Sankey
+	|
+
+"BackAfterThreeMonthy-From2-7Rate"=
+	IF THEN ELSE(Time>0, "Starting Psychotherapy- 2-7-n->3mo",0)
+	~	pt
+	~	For the Sankey
+	|
+
+"DoneForever-From2-7Rate"=
+	IF THEN ELSE(Time>0, "Starting Psychotherapy 2-7-n-Done",0)
+	~	pt
+	~	For the Sankey
+	|
+
+OneVisit= INTEG (
+	OneVisitRate,
+		0)
+	~	pt
+	~	For the Sankey
+	|
+
+"DoneForever-From2-7"= INTEG (
+	"DoneForever-From2-7Rate",
+		0)
+	~	pt
+	~	For the Sankey
+	|
+
+E4=
+	SAMPLE IF TRUE(Time=FINAL TIME,"BackAfterThreeMonthy-FromOneVisit", :NA:)
+	~	pt
+	~		~	:SUPPLEMENTARY 
+	|
+
+E5=
+	SAMPLE IF TRUE(Time=FINAL TIME,"DoneForever-From2-7", :NA:)
+	~	pt
+	~		~	:SUPPLEMENTARY 
+	|
+
+E6=
+	SAMPLE IF TRUE(Time=FINAL TIME,"BackAfterThreeMonthy-From2-7",:NA:)
+	~	pt
+	~		~	:SUPPLEMENTARY 
+	|
+
+E7=
+	SAMPLE IF TRUE(Time=FINAL TIME,"8PlusWithinThreeMonths",:NA:)
+	~	pt
+	~		~	:SUPPLEMENTARY 
+	|
+
+E8=
+	SAMPLE IF TRUE(Time=FINAL TIME,"DoneForever-From8Plus",:NA:)
+	~	pt
+	~		~	:SUPPLEMENTARY 
+	|
+
+E9=
+	SAMPLE IF TRUE(Time=FINAL TIME,"BackAfterThreeMonthy-From8Plus",:NA:)
+	~	pt
+	~		~	:SUPPLEMENTARY 
+	|
+
+E3=
+	SAMPLE IF TRUE(Time=FINAL TIME,"DoneForever-FromOneVisit",:NA:)
+	~	pt
+	~		~	:SUPPLEMENTARY 
+	|
+
+SankeyScalar=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C37')
+	~	pt
+	~	the total number of patients in the cohort, from the team's data
+	|
+
+"ModelCohort-Total"=SAMPLE IF TRUE(
+	 Time=FINAL TIME, OneVisit, :NA:)
+	~	pt
+	~	For the Sankey
+	|
+
+E2=SAMPLE IF TRUE(
+	Time=FINAL TIME, "2-7WithinThreeMonths", :NA:)
+	~	pt
+	~		~	:SUPPLEMENTARY 
+	|
+
+"DoneForever-Total"=
+	"DoneForever-From2-7"+"DoneForever-From8Plus"+"DoneForever-FromOneVisit"
+	~	pt
+	~	For the Sankey
+	~	:SUPPLEMENTARY 
+	|
+
+"BackAfterThreeMonths-Total"=
+	"BackAfterThreeMonthy-FromOneVisit"+"BackAfterThreeMonthy-From2-7"+"BackAfterThreeMonthy-From8Plus"
+	~	pt
+	~	For the Sankey
+	~	:SUPPLEMENTARY 
+	|
+
+"DoneForever-FromOneVisit"=
+	"%Visit1-n-Done"*OneVisit
+	~	pt
+	~	For the Sankey
+	|
+
+"DoneForever-From8Plus"=
+	"8PlusWithinThreeMonths"*"%Visit8PL-n-Done"
+	~	pt
+	~	For the Sankey
+	|
+
+"HS Bronze Standard - All"=
+	"Total Pts <3months"/"Total Pts <3months"
+	~	Dmnl
+	~		~	:SUPPLEMENTARY 
+	|
+
+HS Bronze Standard for AUD=
+	"# Pts <3mo in Team w/AUD"/"# Pts <3mo in Team w/AUD"
+	~	Dmnl
+	~		|
+
+HS Bronze Standard for Depression=
+	"# Pts <3mo in Team with Depression"/"# Pts <3mo in Team with Depression"
+	~	Dmnl
+	~		|
+
+HS Bronze Standard for OUD=
+	"# Pts <3mo in Team w/OUD"/"# Pts <3mo in Team w/OUD"
+	~	Dmnl
+	~		|
+
+HS Bronze Standard for PTSD=
+	"# Pts <3mo in Team w/PTSD"/"# Pts <3mo in Team w/PTSD"
+	~	Dmnl
+	~		|
+
+"HS Gold Standard - All"=
+	"<3mo Visit 8PL"/"Total Pts <3months"
+	~	Dmnl
+	~	Total patients who received a full, timely dose this quarter (i.e., \
+		completed 8+ visits within 3 months) / over total patients in care = \
+		"Completers" (they may or may not be "graduators")
+	~	:SUPPLEMENTARY 
+	|
+
+"# Total Pts in Team w/AUD"=
+	"% of Total Pts w/AUD"*Total Pts in Team
+	~	pt
+	~		|
+
+"# Total Pts in Team w/OUD"=
+	"% of Total Pts w/OUD"*Total Pts in Team
+	~	pt
+	~		|
+
+"# Total Pts in Team w/PTSD"=
+	"% of Total Pts w/PTSD"*Total Pts in Team
+	~	pt
+	~		|
+
+"# Total Pts in Team with Depression"=
+	"% of Total Pts w/Depression"*Total Pts in Team
+	~	pt
+	~		|
+
+HS Gold Standard for PTSD=
+	("<3mo Visit 8PL"*"% of Total Pts <3mo w/PTSD")/"# Pts <3mo in Team w/PTSD"
+	~	Dmnl
+	~		~	:SUPPLEMENTARY 
+	|
+
+"From1-PL3mo Ending High D"=
+	"From1-HighD"/("From1-PL3mo Avg Time in Upper Q"*(1+STEP("Percent Change Duration of Pts in Care >3mo"\
+		,10)))
+	~	pt/Week
+	~		|
+
+"From1-+PLmo Ending Low D"=
+	"From1-LowD"/("From1-PL3mo Avg Time in Lower Q"*(1+STEP("Percent Change Duration of Pts in Care >3mo"\
+		,10)))
+	~	pt/Week
+	~		|
+
+"From1-+PLmo Ending Mid D"=
+	"From1-MidD"/("From1-PL3mo Avg Time in Mid Qs"*(1+STEP("Percent Change Duration of Pts in Care >3mo"\
+		,10)))
+	~	pt/Week
+	~		|
+
+"From2-7-PL3mo Ending Mid D"=
+	"From2-7-MidD"/("From2-7-PL3mo Avg Time in Mid Qs"*(1+STEP("Percent Change Duration of Pts in Care >3mo"\
+		,10)))
+	~	pt/Week
+	~		|
+
+"HS Silver Standard - All"=
+	"# Total Pts <3mo w/2-7 Visits"/"Total Pts <3months"
+	~	Dmnl
+	~	Total patients with 2-7 visit this quarter (i.e., are on track to, but \
+		have not yet, received a full dose) / total patients in care = "Initiators"
+	~	:SUPPLEMENTARY 
+	|
+
+HS Silver Standard for AUD=
+	("# Total Pts <3mo w/2-7 Visits"*"% of Total Pts <3mo w/AUD")/"# Pts <3mo in Team w/AUD"
+	~	Dmnl
+	~		|
+
+HS Silver Standard for Depression=
+	("# Total Pts <3mo w/2-7 Visits"*"% of Total Pts <3mo w/Depression")/"# Pts <3mo in Team with Depression"
+	~	Dmnl
+	~		|
+
+HS Silver Standard for OUD=
+	("# Total Pts <3mo w/2-7 Visits"*"% of Total Pts <3mo w/OUD")/"# Pts <3mo in Team w/OUD"
+	~	Dmnl
+	~		|
+
+HS Silver Standard for PTSD=
+	("# Total Pts <3mo w/2-7 Visits"*"% of Total Pts <3mo w/PTSD")/"# Pts <3mo in Team w/PTSD"
+	~	Dmnl
+	~		|
+
+">3mo - Supply Used by FromVisit8PL"=
+	(("From8PL-LowD"*"Frequency >3mo - 8-12Visits-LowD"*(1/(1+STEP("Percent Change RVI of Patients in Care >3mo"\
+		,10))))
+	+
+	("From8PL-MidD"*"Frequency >3mo - 8-12Visits-MidD"*(1/(1+STEP("Percent Change RVI of Patients in Care >3mo"\
+		,10))))
+	+
+	("From8PL-HighD"*"Frequency >3mo - 8-12Visits-HighD"*(1/(1+STEP("Percent Change RVI of Patients in Care >3mo"\
+		,10)))))
+	*(1+"Missed Appointment %")
+	~	appt/Week
+	~		|
+
+EBP Bronze Standard for AUD=
+	HS Bronze Standard for AUD*"% of pts <3mo w >0 Templates for AUD"
+	~	Dmnl
+	~	All patients with >0 templates with an appointment in <3 months with the \
+		diagnosis / All patients with an appointment in <3 months with the \
+		diagnosis
+	~	:SUPPLEMENTARY 
+	|
+
+EBP Bronze Standard for Depression=
+	HS Bronze Standard for Depression*"% of pts <3mo w >0 Templates for Depression"
+	~	Dmnl
+	~	All patients with >0 templates with an appointment in <3 months with the \
+		diagnosis / All patients with an appointment in <3 months with the \
+		diagnosis
+	~	:SUPPLEMENTARY 
+	|
+
+"From2-7-PL3mo Ending High D"=
+	"From2-7-HighD"/("From2-7-PL3mo Avg Time in Upper Q"*(1+STEP("Percent Change Duration of Pts in Care >3mo"\
+		,10)))
+	~	pt/Week
+	~		|
+
+"From2-7-PL3mo Ending Low D"=
+	"From2-7-LowD"/("From2-7-PL3mo Avg Time in Lower Q"*(1+STEP("Percent Change Duration of Pts in Care >3mo"\
+		,10)))
+	~	pt/Week
+	~		|
+
+EBP Bronze Standard for PTSD=
+	HS Bronze Standard for PTSD*"% of pts <3mo w >0 Templates for DepressionPTSD"
+	~	Dmnl
+	~	All patients with >0 templates with an appointment in <3 months with the \
+		diagnosis / All patients with an appointment in <3 months with the \
+		diagnosis
+	~	:SUPPLEMENTARY 
+	|
+
+"Percent Change RVI of Patients in Care >3mo"=
+	0
+	~	Dmnl [-1,1,0.05]
+	~	Relative change in the average RVI of patients in care after their first 3 \
+		months.
+	|
+
+HS Gold Standard for OUD=
+	("<3mo Visit 8PL"*"% of Total Pts <3mo w/OUD")/"# Pts <3mo in Team w/OUD"
+	~	Dmnl
+	~		~	:SUPPLEMENTARY 
+	|
+
+"From8PL-PL3mo Ending High D"=
+	"From8PL-HighD"/("From8PL-PL3mo Avg Time in Upper Q"*(1+STEP("Percent Change Duration of Pts in Care >3mo"\
+		,10)))
+	~	pt/Week
+	~		|
+
+">3mo - Supply Used by FromVisit1"=
+	(
+	
+	("From1-LowD"*"Frequency >3mo - 1Visit-LowD"*(1/(1+STEP("Percent Change RVI of Patients in Care >3mo"\
+		,10))))
+	+
+	("From1-MidD"*"Frequency >3mo - 1Visit-MidD"*(1/(1+STEP("Percent Change RVI of Patients in Care >3mo"\
+		,10))))
+	+
+	("From1-HighD"*"Frequency >3mo - 1Visit-HighD"*(1/(1+STEP("Percent Change RVI of Patients in Care >3mo"\
+		,10))))
+	
+	)
+	
+	*(1+"Missed Appointment %")
+	~	appt/Week
+	~		|
+
+">3mo - Supply Used by FromVisit2-7"=
+	(("From2-7-LowD"*"Frequency >3mo - 2-7Visits-LowD"*(1/(1+STEP("Percent Change RVI of Patients in Care >3mo"\
+		,10))))
+	+
+	("From2-7-MidD"*"Frequency >3mo - 2-7Visits-MidD"*(1/(1+STEP("Percent Change RVI of Patients in Care >3mo"\
+		,10))))
+	+
+	("From2-7-HighD"*"Frequency >3mo - 2-7Visits-HighD"*(1/(1+STEP("Percent Change RVI of Patients in Care >3mo"\
+		,10)))))
+	*(1+"Missed Appointment %")
+	~	appt/Week
+	~		|
+
+HS Gold Standard for Depression=
+	("<3mo Visit 8PL"*"% of Total Pts <3mo w/Depression")/"# Pts <3mo in Team with Depression"
+	~	Dmnl
+	~		~	:SUPPLEMENTARY 
+	|
+
+"Percent Change Duration of Pts in Care >3mo"=
+	0
+	~	Dmnl [-1,1,0.05]
+	~	Relative change in the average duration of patients in care after their \
+		first 3 months.
+	|
+
+"From8PL-PL3mo Ending Mid D"=
+	"From8PL-MidD"/("From8PL-PL3mo Avg Time in Mid Qs"*(1+STEP("Percent Change Duration of Pts in Care >3mo"\
+		,10)))
+	~	pt/Week
+	~		|
+
+HS Gold Standard for AUD=
+	("<3mo Visit 8PL"*"% of Total Pts <3mo w/AUD")/"# Pts <3mo in Team w/AUD"
+	~	Dmnl
+	~		~	:SUPPLEMENTARY 
+	|
+
+EBP Bronze Standard for OUD=
+	HS Bronze Standard for OUD*"% of pts <3mo w >0 Templates for OUD"
+	~	Dmnl
+	~	All patients with >0 templates with an appointment in <3 months with the \
+		diagnosis / All patients with an appointment in <3 months with the \
+		diagnosis
+	~	:SUPPLEMENTARY 
+	|
+
+"From8PL-PL3mo Ending Low D"=
+	"From8PL-LowD"/("From8PL-PL3mo Avg Time in Lower Q"*(1+STEP("Percent Change Duration of Pts in Care >3mo"\
+		,10)))
+	~	pt/Week
+	~		|
+
+"%Visit1-n-Done"=
+	MAX(MIN("%Visit1-n-Done Data"+STEP("Change in %Visit1-n-Done"
+	,10),1),0)
+	~	Dmnl
+	~	% of patients who do not return after completing their first appointment. \
+		Constrained to be between 0 and 100%.
+	|
+
+Supply Used by All Pts=
+	"Supply Used by Pts <3mo"+
+	"Supply Used by Pts >3mo"
+	~	appt/Week
+	~	Sum of all appointment used per week by all possible patient service use \
+		pathways.
+	|
+
+Graduation Rate=
+	Ending 8PL*"%Visit8PL-n-Done"
+	~	pt/Week
+	~		~	:SUPPLEMENTARY 
+	|
+
+"Supply Used by Pts <3mo"=
+	"<3mo - Supply Used by Visit1"
+	+"<3mo - Supply Used by Visit 2-7"
+	+"<3mo - Supply Used by Visit 8PL"
+	~	appt/Week
+	~	Sum of all appointment used per week by patients in first 3 months of \
+		engagement.
+	|
+
+"%Visit8PL-n-Done"=
+	MAX(MIN("%Visit8PL-n-Done Data"+STEP("Change in %Visit8PL-n-Done"
+	,10),1),0)
+	~	Dmnl
+	~	Constrained to be between 0 and 100%.
+	|
+
+Supply Available for New Pts=
+	MAX((Total Supply-Supply Used by All Pts)+STEP(Change in New Patient Slots,10),0)
+	~	appt/Week
+	~	New patient supply is all remaining supply, after all existing patients \
+		are seen.  It is prevented from going below zero.
+	|
+
+Starting Psychotherapy=
+	Percieved New Pt Appt Supply*Pts per Appt*New Patient Scheduling Efficiency
+	~	pt/Week
+	~		|
+
+"Starting Psychotherapy- 1"=
+	Starting Psychotherapy
+	~	pt/Week
+	~	Rate of patients starting 1st visit in psychotherapy.
+	|
+
+Percieved New Pt Appt Supply=
+	SMOOTH(Supply Available for New Pts,Time to Percieve Supply for New Pts)
+	~	appt/Week
+	~		|
+
+Time to Percieve Supply for New Pts=
+	4
+	~	Week
+	~	Time for providers to percieve changes in new patient supply.
+	|
+
+Start Rate Relative to Data=
+	Starting Psychotherapy/Team Data on New Patients Referred to Psychotherapy
+	~	Dmnl
+	~	The relative start rate, compared to the team's current state data.
+	~	:SUPPLEMENTARY 
+	|
+
+"HS Pts<=3mo over Total - All"=
+	"Total Pts <3months"/Total Pts in Team
+	~	Dmnl
+	~	All pts who started psychotherapy in the past 3 months (i.e., had at least one visit \
+		within 3 months) / all pts in care
+		or?
+		All pts who had at least 1 visit in the past 3 months / all pts in care
+	~	:SUPPLEMENTARY 
+	|
+
+Team Data on New Patients Referred to Psychotherapy=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C33')
+	~	pt/Week
+	~	From the team's data: psycho60 visits/appts for new patients per week.
+	|
+
+Baseline Appointment Supply=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C35')
+	~	appt/Week
+	~	The baseline number of the appointments offered each week, taken from the \
+		team's data. However, the number of appointments offered specifically for \
+		this service is currently unmeasurable.  We estimate the available supply \
+		from the upper quartile of appointments completed each week for this \
+		service.
+	|
+
+Reallocation of Supply to Psychotherapy=
+	0
+	~	appt/Week [0,20,1]
+	~	Manually adjust the number of official appointments offered in week 10, \
+		with the assumption that these appoints come at the expense of \
+		appointments offered for other services.
+	|
+
+Total Supply=
+	Baseline Appointment Supply+STEP(Reallocation of Supply to Psychotherapy,10)
+	~	appt/Week
+	~	Total number of appointments offered for this service each week.
+	|
+
+Change in New Patient Slots=
+	0
+	~	appt/Week [0,10,1]
+	~	Manually adjust the number of appointments allocated specifically to new \
+		patients in week 10, with the assumption that these appointments come from \
+		reducing appointments in other services.
+	|
+
+"% Go on to 2-7 in <3mo"=
+	MAX(MIN("% Go on to 2-7 Data in <3mo"+STEP("Change in % Go on to 2-7 in <3mo",10),1)\
+		,0)
+	~	Dmnl
+	~	Constrained to be between 0 and 100%.
+	|
+
+"Starting Psychotherapy 2-7-n-Done"=
+	Ending 1*"% Go on to 2-7 in <3mo"*"%Visit2-7-n-Done"
+	~	pt/Week
+	~	Rate of patients starting 2nd visit, who will complete 2-7 visits, BUT not \
+		continue engagement to receive full dose.
+	|
+
+"From1-PL3mo into High D"=
+	Ending 1*(1-"% Go on to 2-7 in <3mo"-"%Visit1-n-Done")*"PL3mo % starting HighD"
+	~	pt/Week
+	~		|
+
+"From1-PL3mo into Low D"=
+	Ending 1*(1-"% Go on to 2-7 in <3mo"-"%Visit1-n-Done")*"PL3mo % starting LowD"
+	~	pt/Week
+	~		|
+
+"From1-PL3mo into Mid D"=
+	Ending 1*(1-"% Go on to 2-7 in <3mo"-"%Visit1-n-Done")*"PL3mo % starting MidD"
+	~	pt/Week
+	~		|
+
+"Change in %2-7-n-More<3mo"=
+	0
+	~	Dmnl
+	~	An absolute change in the % (i.e., a value of 0.5 will increase a baseline \
+		of 10% to a rate of 60%).
+	|
+
+"From1-PL3mo Avg Time in Lower Q"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C24')
+	~	Week
+	~		|
+
+"From1-PL3mo Avg Time in Mid Qs"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C25')
+	~	Week
+	~		|
+
+"From1-PL3mo Avg Time in Upper Q"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C26')
+	~	Week
+	~		|
+
+"% Go on to 2-7 Data in <3mo"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C6')
+	~	Dmnl
+	~		|
+
+"%Visit8PL-n-Done Data"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C5')
+	~	Dmnl
+	~		|
+
+"%Visit1-n-Done Data"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C3')
+	~	Dmnl
+	~		|
+
+"Change in %Visit1-n-Done"=
+	0
+	~	Dmnl [0,1,0.05]
+	~	An absolute change in the % (i.e., a value of 0.5 will increase a baseline \
+		of 10% to a rate of 60%).
+	|
+
+"Change in %Visit8PL-n-Done"=
+	0
+	~	Dmnl
+	~	An absolute change in the % (i.e., a value of 0.5 will increase a baseline \
+		of 10% to a rate of 60%).
+	|
+
+"%Visit2-7-n-Done"=
+	MAX(MIN("%Visit2-7-n-Done Data"+STEP("Change in %2-7-n-Done",10),1),0)
+	~	Dmnl
+	~	Constrained to be between 0 and 100%.
+	|
+
+"%Visit2-7-n-Done Data"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C4')
+	~	Dmnl
+	~		|
+
+"%Visit2-7-n-More<3mo"=
+	MAX(MIN("%Visit2-7-n-More<3mo Data"+STEP("Change in %2-7-n-More<3mo",10),1),0)
+	~	Dmnl
+	~	Constrained to be between 0 and 100%.
+	|
+
+"%Visit2-7-n-More<3mo Data"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C7')
+	~	Dmnl
+	~		|
+
+"Change in % Go on to 2-7 in <3mo"=
+	0
+	~	Dmnl
+	~	An absolute change in the % (i.e., a value of 0.5 will increase a baseline \
+		of 10% to a rate of 60%).
+	|
+
+"Change in %2-7-n-Done"=
+	0
+	~	Dmnl
+	~	An absolute change in the % (i.e., a value of 0.5 will increase a baseline \
+		of 10% to a rate of 60%).
+	|
+
+"From8PL-PL3mo into Low D"=
+	Ending 8PL*(1-"%Visit8PL-n-Done")*"PL3mo % starting LowD"
+	~	pt/Week
+	~		|
+
+"From8PL-PL3mo into Mid D"=
+	Ending 8PL*(1-"%Visit8PL-n-Done")*"PL3mo % starting MidD"
+	~	pt/Week
+	~		|
+
+"From8PL-PL3mo into High D"=
+	Ending 8PL*(1-"%Visit8PL-n-Done")*"PL3mo % starting HighD"
+	~	pt/Week
+	~		|
+
+"<3mo - Supply Used by Visit1"=
+	("<3mo Visit 1"*"Frequency <3mo - 1Visit")*(1+"Missed Appointment %")
+	~	appt/Week
+	~		|
+
+"Supply Used by Pts >3mo"=
+	">3mo - Supply Used by FromVisit1"+">3mo - Supply Used by FromVisit2-7"+">3mo - Supply Used by FromVisit8PL"
+	~	appt/Week
+	~	Sum of all appointment used per week by patients who continue after first \
+		3 months of engagement.
+	|
+
+TwoSevenBefore=
+	"<3mo Visit 2-7 -n-done"+"<3mo Visit 2-7-n->3mo"+"<3mo Visit 2-7-n-More<3mo"
+	~	pt
+	~		~	:SUPPLEMENTARY 
+	|
+
+"<3mo - Supply Used by Visit 2-7"=
+	(("<3mo Visit 2-7 -n-done"*"Frequency <3mo - 2-7Visits-n-done")+
+	("<3mo Visit 2-7-n-More<3mo"*"Frequency <3mo - 2-7Visits-n-More<3mo")+
+	("<3mo Visit 2-7-n->3mo"*"Frequency <3mo - 2-7Visits-n-More>3mo"))*(1+"Missed Appointment %"\
+		)
+	~	appt/Week
+	~		|
+
+"Frequency <3mo - 2-7Visits-n-done"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C9')
+	~	appt/(Week*pt)
+	~		|
+
+"Frequency <3mo - 2-7Visits-n-More<3mo"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C11')
+	~	appt/(Week*pt)
+	~		|
+
+"Frequency <3mo - 8-12 Visits"=
+	"Frequency <3mo - 2-7Visits-n-More<3mo"
+	~	appt/(Week*pt) [0.1,3,0.2]
+	~		|
+
+"<3mo - Supply Used by Visit 8PL"=
+	("<3mo Visit 8PL"*"Frequency <3mo - 8-12 Visits")*(1+"Missed Appointment %")
+	~	appt/Week
+	~		|
+
+"# Pts <3mo in Team w/AUD"=
+	"% of Total Pts <3mo w/AUD"*"Total Pts <3months"
+	~	pt
+	~		|
+
+"# Pts <3mo in Team w/OUD"=
+	"% of Total Pts <3mo w/OUD"*"Total Pts <3months"
+	~	pt
+	~		|
+
+"# Pts <3mo in Team w/PTSD"=
+	"% of Total Pts <3mo w/PTSD"*"Total Pts <3months"
+	~	pt
+	~		|
+
+"# Pts <3mo in Team with Depression"=
+	"% of Total Pts <3mo w/Depression"*"Total Pts <3months"
+	~	pt
+	~		|
+
+"# Total Pts <3mo w/2-7 Visits"=
+	"<3mo Visit 2-7 -n-done"+"<3mo Visit 2-7-n->3mo"+"<3mo Visit 2-7-n-More<3mo"
+	~	pt
+	~		|
+
+"% of pts <3mo w >0 Templates for AUD"=
+	0.2
+	~	Dmnl
+	~		|
+
+Avg Time in Visit 8PL=
+	12-Avg Time in Visit 1-"Avg Time in Visit 2-7-More<3mo"
+	~	Week [?,?,1]
+	~		|
+
+"% of pts <3mo w >0 Templates for DepressionPTSD"=
+	0.2
+	~	Dmnl
+	~		|
+
+"% of pts <3mo w >0 Templates for OUD"=
+	0.2
+	~	Dmnl
+	~		|
+
+"% of pts <3mo w >7 templates or \"completion\" template for AUD"=
+	0.02
+	~	Dmnl
+	~		|
+
+"% of pts <3mo w >7 templates or \"completion\" template for DepressionPTSD"=
+	0.02
+	~	Dmnl
+	~		|
+
+EBP Gold Standard for AUD=
+	EBP Silver Standard for AUD*"% of pts <3mo w >7 templates or \"completion\" template for AUD"
+	~	Dmnl
+	~		~	:SUPPLEMENTARY 
+	|
+
+"% of pts <3mo w >7 templates or \"completion\" template for OUD"=
+	0.02
+	~	Dmnl
+	~		|
+
+"% of pts <3mo w/ >1 templates for AUD"=
+	0.2
+	~	Dmnl
+	~		|
+
+EBP Gold Standard for PTSD=
+	EBP Silver Standard for PTSD*"% of pts <3mo w >7 templates or \"completion\" template for DepressionPTSD"
+	~	Dmnl
+	~		~	:SUPPLEMENTARY 
+	|
+
+"% of pts <3mo w/ >1 templates for DepressionPTSD"=
+	0.2
+	~	Dmnl
+	~		|
+
+"% of pts <3mo w/ >1 templates for OUD"=
+	0.2
+	~	Dmnl
+	~		|
+
+"% of Total Pts <3mo w/AUD"=
+	0.3
+	~	Dmnl
+	~		|
+
+"HS Pts<=3mo over Total for PTSD"=
+	"# Pts <3mo in Team w/PTSD"/"# Total Pts in Team w/PTSD"
+	~	Dmnl
+	~	All pts who start psychotherapy / All pts in diagnositc cohort
+	~	:SUPPLEMENTARY 
+	|
+
+"% of Total Pts <3mo w/OUD"=
+	0.2
+	~	Dmnl
+	~		|
+
+"% of Total Pts <3mo w/PTSD"=
+	0.9
+	~	Dmnl
+	~		|
+
+"% of Total Pts w/AUD"=
+	0.6
+	~	Dmnl
+	~		|
+
+"% of Total Pts w/OUD"=
+	0.6
+	~	Dmnl
+	~		|
+
+"% of Total Pts w/PTSD"=
+	0.7
+	~	Dmnl
+	~		|
+
+"HS Pts<=3mo over Total for OUD"=
+	"# Pts <3mo in Team w/OUD"/"# Total Pts in Team w/OUD"
+	~	Dmnl
+	~	All pts who start psychotherapy / All pts in diagnositc cohort
+	~	:SUPPLEMENTARY 
+	|
+
+EBP Gold Standard for Depression=
+	EBP Silver Standard for Depression*"% of pts <3mo w >7 templates or \"completion\" template for Depression"
+	~	Dmnl
+	~		~	:SUPPLEMENTARY 
+	|
+
+EBP Gold Standard for OUD=
+	EBP Silver Standard for OUD*"% of pts <3mo w >7 templates or \"completion\" template for OUD"
+	~	Dmnl
+	~		~	:SUPPLEMENTARY 
+	|
+
+EBP Silver Standard for AUD=
+	HS Silver Standard for AUD*"% of pts <3mo w/ >1 templates for AUD"
+	~	Dmnl
+	~		|
+
+"HS Pts<=3mo over Total for AUD"=
+	"# Pts <3mo in Team w/AUD"/"# Total Pts in Team w/AUD"
+	~	Dmnl
+	~	All pts who start psychotherapy / All pts in diagnositc cohort
+	~	:SUPPLEMENTARY 
+	|
+
+"HS Pts<=3mo over Total for Depression"=
+	"# Pts <3mo in Team with Depression"/"# Total Pts in Team with Depression"
+	~	Dmnl
+	~	All pts who start psychotherapy / All pts in diagnositc cohort
+	~	:SUPPLEMENTARY 
+	|
+
+EBP Silver Standard for PTSD=
+	HS Silver Standard for PTSD*"% of pts <3mo w/ >1 templates for DepressionPTSD"
+	~	Dmnl
+	~		|
+
+EBP Silver Standard for OUD=
+	HS Silver Standard for OUD*"% of pts <3mo w/ >1 templates for OUD"
+	~	Dmnl
+	~		|
+
+EBP Silver Standard for Depression=
+	HS Silver Standard for Depression*"% of pts <3mo w/ >1 templates for Depression"
+	~	Dmnl
+	~		|
+
+"# of Pts in Psych >3 mo"=
+	OneAfter+TwoSevenAfter+EightPlusAfter
+	~	pt
+	~		|
+
+"% of pts <3mo w >0 Templates for Depression"=
+	0.2
+	~	Dmnl
+	~		|
+
+"% of pts <3mo w/ >1 templates for Depression"=
+	0.2
+	~	Dmnl
+	~		|
+
+"% of Total Pts <3mo w/Depression"=
+	0.6
+	~	Dmnl
+	~		|
+
+"% of Total Pts w/Depression"=
+	0.6
+	~	Dmnl
+	~		|
+
+"Total Pts <3months"=
+	"<3mo Visit 1"+"<3mo Visit 2-7-n->3mo"+"<3mo Visit 8PL"+"<3mo Visit 2-7 -n-done"+"<3mo Visit 2-7-n-More<3mo"
+	~	pt
+	~		|
+
+Total Pts in Team=
+	"# of Pts in Psych >3 mo"+"Total Pts <3months"
+	~	pt
+	~		|
+
+"Ending 2-7-n-Done"=
+	ZIDZ("<3mo Visit 2-7 -n-done","Avg Time in Visit 2-7-n-Done")
+	~	pt/Week
+	~	Rate of patients completing their 2-7th visit, BUT who will not continue \
+		engagement to receive full dose.
+	|
+
+"Ending 2-7-n-More<3mo"=
+	"<3mo Visit 2-7-n-More<3mo"/"Avg Time in Visit 2-7-More<3mo"
+	~	pt/Week
+	~	Rate of patients ending their 2-7th visit, who will complete up to 7 \
+		visits total in LESS than 3 months.  This is the desired engagement \
+		pattern.
+	|
+
+"From2-7-PL3mo into High D"=
+	"Ending 2-7-n->3mo"*"PL3mo % starting HighD"
+	~	pt/Week
+	~		|
+
+"Avg Time in Visit 2-7-More<3mo"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C14')
+	~	Week
+	~		|
+
+"Avg Time in Visit 2-7-n-Done"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C13')
+	~	Week
+	~	Rate of patients ending their 2-7th visit, who will not continue care.
+	|
+
+OneAfter=
+	"From1-LowD"+"From1-MidD"+"From1-HighD"
+	~	pt
+	~		|
+
+"Starting Psychotherapy 2-7-n-More<3mo"=
+	Ending 1*"% Go on to 2-7 in <3mo"*"%Visit2-7-n-More<3mo"
+	~	pt/Week
+	~	Rate of patients starting 2nd visit, who will complete 2-7 visits in LESS \
+		than 3 months.  This is the desired engagement pattern.
+	|
+
+"From2-7-PL3mo into Mid D"=
+	"Ending 2-7-n->3mo"*"PL3mo % starting MidD"
+	~	pt/Week
+	~		|
+
+"From2-7-PL3mo into Low D"=
+	"Ending 2-7-n->3mo"*"PL3mo % starting LowD"
+	~	pt/Week
+	~		|
+
+"<3mo Visit 2-7 -n-done"= INTEG (
+	"Starting Psychotherapy 2-7-n-Done"-"Ending 2-7-n-Done",
+		0.1)
+	~	pt
+	~		|
+
+TwoSevenAfter=
+	"From2-7-LowD"+"From2-7-MidD"+"From2-7-HighD"
+	~	pt
+	~		|
+
+"<3mo Visit 2-7-n-More<3mo"= INTEG (
+	"Starting Psychotherapy 2-7-n-More<3mo"-"Ending 2-7-n-More<3mo",
+		0.1)
+	~	pt
+	~		|
+
+"Starting Psychotherapy- 8PL"=
+	"Ending 2-7-n-More<3mo"
+	~	pt/Week
+	~	Rate of patients starting 8th visit, who will complete 8+ visits in LESS \
+		than 3 months.  This is the desired pattern of engagement.
+	|
+
+EightPlusAfter=
+	"From8PL-LowD"+"From8PL-MidD"+"From8PL-HighD"
+	~	pt
+	~		|
+
+"Starting Psychotherapy- 2-7-n->3mo"=
+	Ending 1*"% Go on to 2-7 in <3mo"*(1-"%Visit2-7-n-More<3mo"-"%Visit2-7-n-Done")
+	~	pt/Week
+	~	Rate of patients starting 2nd visit, who will complete up to 7 visits \
+		total in more than 3 months (and thus less than 7 in their first 3 months \
+		in care).
+	|
+
+"Missed Appointment %"=
+	0.1
+	~	Dmnl
+	~	Captures all the wasted slots due to true no-shows.
+	|
+
+New Patient Scheduling Efficiency=
+	1
+	~	Dmnl [0,1,0.01]
+	~	The percent of open slots actually used for new patients.
+	|
+
+Pts per Appt=
+	1
+	~	pt/appt
+	~	Would be >1 if group visit.
+	|
+
+"% of pts <3mo w >7 templates or \"completion\" template for Depression"=
+	0.02
+	~	Dmnl
+	~		|
+
+"From8PL-PL3mo Avg Time in Mid Qs"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C31')
+	~	Week
+	~		|
+
+"From8PL-PL3mo Avg Time in Upper Q"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C32')
+	~	Week
+	~		|
+
+"From8PL-HighD"= INTEG (
+	"From8PL-PL3mo into High D"-"From8PL-PL3mo Ending High D",
+		0)
+	~	pt
+	~		|
+
+"From8PL-LowD"= INTEG (
+	"From8PL-PL3mo into Low D"-"From8PL-PL3mo Ending Low D",
+		0)
+	~	pt
+	~		|
+
+"From8PL-MidD"= INTEG (
+	"From8PL-PL3mo into Mid D"-"From8PL-PL3mo Ending Mid D",
+		0)
+	~	pt
+	~		|
+
+"From8PL-PL3mo Avg Time in Lower Q"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C30')
+	~	Week
+	~		|
+
+"Frequency >3mo - 1Visit-MidD"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C16')
+	~	appt/(Week*pt)
+	~		|
+
+"PL3mo % starting HighD"=
+	0.25
+	~	Dmnl [0,1]
+	~		|
+
+"PL3mo % starting LowD"=
+	0.25
+	~	Dmnl
+	~		|
+
+"PL3mo % starting MidD"=
+	0.5
+	~	Dmnl
+	~		|
+
+"From1-LowD"= INTEG (
+	"From1-PL3mo into Low D"-"From1-+PLmo Ending Low D",
+		0)
+	~	pt
+	~		|
+
+"From2-7-PL3mo Avg Time in Lower Q"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C27')
+	~	Week
+	~		|
+
+"From2-7-PL3mo Avg Time in Mid Qs"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C28')
+	~	Week
+	~		|
+
+"From2-7-PL3mo Avg Time in Upper Q"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C29')
+	~	Week
+	~		|
+
+Avg Time in Visit 1=
+	1
+	~	Week [1,10,1]
+	~		|
+
+"From2-7-LowD"= INTEG (
+	"From2-7-PL3mo into Low D"-"From2-7-PL3mo Ending Low D",
+		0)
+	~	pt
+	~		|
+
+"From2-7-MidD"= INTEG (
+	"From2-7-PL3mo into Mid D"-"From2-7-PL3mo Ending Mid D",
+		0)
+	~	pt
+	~		|
+
+"Frequency >3mo - 8-12Visits-MidD"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C22')
+	~	appt/(Week*pt)
+	~		|
+
+"Frequency >3mo - 1Visit-LowD"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C15')
+	~	appt/(Week*pt)
+	~		|
+
+"Frequency >3mo - 2-7Visits-HighD"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C20')
+	~	appt/(Week*pt)
+	~		|
+
+"Frequency >3mo - 2-7Visits-LowD"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C18')
+	~	appt/(Week*pt)
+	~		|
+
+"Frequency >3mo - 1Visit-HighD"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C17')
+	~	appt/(Week*pt)
+	~		|
+
+"Frequency >3mo - 8-12Visits-HighD"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C23')
+	~	appt/(Week*pt)
+	~		|
+
+"Frequency >3mo - 8-12Visits-LowD"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C21')
+	~	appt/(Week*pt)
+	~		|
+
+"Frequency >3mo - 2-7Visits-MidD"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C19')
+	~	appt/(Week*pt)
+	~		|
+
+"From2-7-HighD"= INTEG (
+	"From2-7-PL3mo into High D"-"From2-7-PL3mo Ending High D",
+		0)
+	~	pt
+	~		|
+
+"From1-HighD"= INTEG (
+	"From1-PL3mo into High D"-"From1-PL3mo Ending High D",
+		0)
+	~	pt
+	~		|
+
+"From1-MidD"= INTEG (
+	"From1-PL3mo into Mid D"-"From1-+PLmo Ending Mid D",
+		0)
+	~	pt
+	~		|
+
+"Avg Time in Visit 2-7-n->3mo"=
+	11
+	~	Week
+	~		|
+
+Ending 1=
+	"<3mo Visit 1"/Avg Time in Visit 1
+	~	pt/Week
+	~	Rate of patients completing their first visit in psychotherapy.
+	|
+
+"Ending 2-7-n->3mo"=
+	"<3mo Visit 2-7-n->3mo"/"Avg Time in Visit 2-7-n->3mo"
+	~	pt/Week
+	~	Rate of patients ending their 2-7th visit, who will complete up to 7 \
+		visits total in more than 3 months.
+	|
+
+Ending 8PL=
+	"<3mo Visit 8PL"/Avg Time in Visit 8PL
+	~	pt/Week
+	~	Rate of patients who are "graduating," i.e., receiving a full, timely dose \
+		of psychotherapy.
+	|
+
+"Frequency <3mo - 2-7Visits-n-More>3mo"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C10')
+	~	appt/(Week*pt)
+	~	The average number of appointments per patient per week, estimated from taking the \
+		mean of all individual patients' counts of completed appointments that \
+		meet the criteria defining this stock and their time to complete those \
+		appointments (the date difference between their last completed appointment \
+		and their first -- of the subset of each patient's appointments that meet \
+		the criteria defining this stock). 
+		
+		average number of appointments patients complete in this stock and the \
+		average number of weeks patients spend in this stock.
+	|
+
+"<3mo Visit 1"= INTEG (
+	"Starting Psychotherapy- 1"-Ending 1,
+		0.1)
+	~	pt
+	~		|
+
+"<3mo Visit 2-7-n->3mo"= INTEG (
+	"Starting Psychotherapy- 2-7-n->3mo"-"Ending 2-7-n->3mo",
+		0.1)
+	~	pt
+	~		|
+
+"<3mo Visit 8PL"= INTEG (
+	"Starting Psychotherapy- 8PL"-Ending 8PL,
+		0.1)
+	~	pt
+	~		|
+
+"Frequency <3mo - 1Visit"=
+	GET DIRECT CONSTANTS('ModelParameters.xlsx','PSYParams','C8')
+	~	appt/(Week*pt)
+	~	This is set to 1.1 visits / week, because "some" people get more than one \
+		visit in their first week.
+	|
+
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
+
+FINAL TIME  = 100
+	~	Week
+	~	The final time for the simulation.
+	|
+
+INITIAL TIME  = -500
+	~	Week
+	~	The initial time for the simulation.
+	|
+
+SAVEPER  = 
+        TIME STEP
+	~	Week [0,?]
+	~	The frequency with which output is stored.
+	|
+
+TIME STEP  = 0.0625
+	~	Week [0,?]
+	~	The time step for the simulation.
+	|
+
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*Interface
+$192-192-192,0,Meiryo|10||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,70,0
+12,1,0,164,145,80,20,3,124,0,0,0,0,0,0
+Reallocation of Supply to Psychotherapy,0,20,1
+12,2,0,165,220,80,20,3,124,0,0,0,0,0,0
+Change in New Patient Slots,0,10,1
+12,3,0,95,740,80,20,3,124,0,0,0,0,0,0
+"Change in %2-7-n-Done",-1,1,0.05
+12,4,0,106,874,80,20,3,124,0,0,0,0,0,0
+"Change in %2-7-n-More<3mo",-1,1,0.05
+12,5,0,114,422,80,20,3,124,0,0,0,0,0,0
+"Change in %Visit1-n-Done",-1,1,0.05
+12,6,0,94,992,80,20,3,124,0,0,0,0,0,0
+"Change in %Visit8PL-n-Done",-1,1,0.05
+12,7,0,141,295,158,23,8,135,0,24,-1,0,0,0,-1--1--1,0-0-0,|12|U|0-0-0
+Engagement Pattern Experiments:
+12,8,0,90,102,93,17,8,135,0,24,-1,0,0,0,-1--1--1,0-0-0,|12|U|0-0-0
+Supply Experiments:
+12,9,0,388,884,166,40,8,135,0,0,-1,0,0,0
+For patients who complete 2-7 visits in their first 3 months, what percent go on to complete even more visits in the first 3 months? = Pts who will receive a full, timely dose = "Completers"
+12,10,0,383,605,155,50,8,135,0,0,-1,0,0,0
+For patients who complete their first appointment, what percent go on to complete 2-7 visits in the first 3 months? = Pts who complete more than 1 visit in first 3 months = "Initiators"
+12,11,0,377,744,172,40,8,135,0,0,-1,0,0,0
+For patients who receive 2-7 visits in first 3 months, what percent never return to care? = Pts who don't receive a full dose = "Initiators who just miss out" = opposite of "Initiators who return later"
+12,12,0,372,426,152,40,8,135,0,0,-1,0,0,0
+For patients who complete ONLY 1 visit in first 3 months, what percent of them have more visits in subsequent months? = Opposite of % "One visit and return later"
+12,13,0,390,1003,192,41,8,135,0,0,-1,0,0,0
+For patients who have completed 8+ visits in first 3 months, what percent go on to complete even more visits in subsequent months? = Pts who stop coming after receiving timely full dose = "Completers who Graduate"
+12,14,0,101,594,80,20,3,252,0,0,0,0,0,0
+"Change in % Go on to 2-7 in <3mo",-1,1,0.05
+12,15,0,870,387,292,276,3,188,0,0,1,0,0,0
+OverTime
+12,16,0,401,145,80,20,3,124,0,0,0,0,0,0
+New Patient Scheduling Efficiency,0,1,0.05
+12,17,0,272,352,271,11,0,135,0,0,-1,0,0,0
+"Completers" = Pts who receive 8+ visits within first 3 months, and then stop coming
+12,18,0,1107,940,529,266,3,188,0,0,1,0,0,0
+Supply_Used
+12,19,0,189,333,186,11,0,135,0,0,-1,0,0,0
+"Initiators" = Pts who receive >1 visit within first 3 months
+12,20,0,259,495,227,24,8,135,0,0,-1,0,0,0
+100% implies that the clinic will not schedule these patients for any appointments after the first 3 month window = no second chances
+12,21,0,272,1069,244,21,8,135,0,0,-1,0,0,0
+100% implies that the clinic will not schedule these patients for any visits after the first 3 month window = everyone who completes, graduates
+12,22,0,695,1244,223,11,0,135,0,0,-1,0,0,0
+Initial RVI and engagement duration are estimated from team's data.
+12,23,0,235,314,237,11,0,135,0,0,-1,0,0,0
+All % are constrained to be between 0 and 100%, regardless of use input.
+12,24,0,1404,387,231,276,3,188,0,0,1,0,0,0
+Performance_Measures_Overview
+12,25,0,410,233,80,20,3,92,0,0,0,0,0,0
+"Missed Appointment %",0,1,0.1
+12,26,0,278,1141,80,20,3,124,0,0,0,0,0,0
+"Percent Change Duration of Pts in Care >3mo",-1,1,0.05
+12,27,0,278,1218,80,20,3,124,0,0,0,0,0,0
+"Percent Change RVI of Patients in Care >3mo",-1,1,0.05
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*Quality Details
+$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,60,0
+12,1,0,507,148,356,275,3,188,0,0,1,0,0,0
+Depression
+12,2,0,1243,726,356,279,3,188,0,0,1,0,0,0
+PTSD
+12,3,0,506,725,357,279,3,188,0,0,1,0,0,0
+AUD
+12,4,0,1241,145,357,279,3,188,0,0,1,0,0,0
+OUD
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*Supply Used
+$192-192-192,0,Meiryo|10||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,90,0
+10,1,Total Supply,207,252,41,11,8,3,0,0,0,0,0,0
+10,2,Supply Available for New Pts,314,194,66,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,3,"Supply Used by Pts >3mo",357,343,63,20,8,3,0,0,0,0,0,0
+1,4,1,2,0,0,0,0,0,64,0,-1--1--1,,1|(245,230)|
+10,5,"Frequency <3mo - 1Visit",740,127,57,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,6,5,32,0,0,0,0,0,64,0,-1--1--1,,1|(680,159)|
+10,7,"Frequency <3mo - 2-7Visits-n-More>3mo",953,130,76,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,8,7,31,0,0,0,0,0,64,0,-1--1--1,,1|(790,207)|
+10,9,"Frequency <3mo - 8-12 Visits",1151,484,62,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,10,9,33,1,0,0,0,0,64,0,-1--1--1,,1|(889,429)|
+10,11,"<3mo Visit 1",742,169,52,11,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,12,"<3mo Visit 2-7-n->3mo",938,174,48,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,13,"<3mo Visit 8PL",1143,532,60,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,14,11,32,0,0,0,0,0,128,0,-1--1--1,,1|(683,182)|
+1,15,12,31,0,0,0,0,0,128,0,-1--1--1,,1|(786,229)|
+1,16,13,33,1,0,0,0,0,128,0,-1--1--1,,1|(897,458)|
+10,17,"Frequency >3mo - 1Visit-LowD",525,621,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,18,"Frequency >3mo - 2-7Visits-LowD",800,619,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,19,"Frequency >3mo - 8-12Visits-LowD",1033,617,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,20,"Frequency >3mo - 1Visit-MidD",537,710,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,21,"Frequency >3mo - 2-7Visits-MidD",795,719,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,22,"Frequency >3mo - 8-12Visits-MidD",1022,715,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,23,"Frequency >3mo - 1Visit-HighD",539,804,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,24,"Frequency >3mo - 2-7Visits-HighD",799,811,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,25,"Frequency >3mo - 8-12Visits-HighD",1024,818,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,26,"Missed Appointment %",788,493,53,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+10,27,"<3mo Visit 2-7 -n-done",933,288,55,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,28,"<3mo Visit 2-7-n-More<3mo",939,389,65,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,29,"Frequency <3mo - 2-7Visits-n-done",936,254,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,30,"Frequency <3mo - 2-7Visits-n-More<3mo",937,348,76,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,31,"<3mo - Supply Used by Visit 2-7",616,292,68,20,8,3,0,0,0,0,0,0
+10,32,"<3mo - Supply Used by Visit1",609,199,50,20,8,3,0,0,0,0,0,0
+10,33,"<3mo - Supply Used by Visit 8PL",609,371,68,20,8,3,0,0,0,0,0,0
+1,34,29,31,0,0,0,0,0,64,0,-1--1--1,,1|(785,271)|
+1,35,27,31,0,0,0,0,0,64,0,-1--1--1,,1|(787,289)|
+1,36,30,31,0,0,0,0,0,64,0,-1--1--1,,1|(779,320)|
+1,37,28,31,0,0,0,0,0,64,0,-1--1--1,,1|(784,343)|
+1,38,32,41,0,0,0,0,0,64,0,-1--1--1,,1|(540,249)|
+1,39,31,41,0,0,0,0,0,64,0,-1--1--1,,1|(542,299)|
+1,40,33,41,0,0,0,0,0,64,0,-1--1--1,,1|(541,342)|
+10,41,"Supply Used by Pts <3mo",461,309,63,20,8,3,0,0,0,0,0,0
+1,42,30,9,1,0,0,0,0,64,0,-1--1--1,,1|(1093,375)|
+1,43,3,90,0,0,0,0,0,64,0,-1--1--1,,1|(358,302)|
+1,44,26,33,0,0,0,0,0,64,0,-1--1--1,,1|(704,435)|
+1,45,26,31,0,0,0,0,0,64,0,-1--1--1,,1|(706,397)|
+1,46,26,32,0,0,0,0,0,64,0,-1--1--1,,1|(702,351)|
+10,47,">3mo - Supply Used by FromVisit1",243,687,68,20,8,3,0,0,0,0,0,0
+1,48,23,47,0,0,0,0,0,64,0,-1--1--1,,1|(397,748)|
+1,49,17,47,0,0,0,0,0,64,0,-1--1--1,,1|(393,651)|
+1,50,20,47,0,0,0,0,0,64,0,-1--1--1,,1|(399,699)|
+10,51,"From1-HighD",530,838,55,11,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,52,51,47,0,0,0,0,0,64,0,-1--1--1,,1|(401,770)|
+10,53,"From1-LowD",524,652,53,11,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,54,53,47,0,0,0,0,0,64,0,-1--1--1,,1|(397,667)|
+10,55,"From1-MidD",531,740,51,11,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,56,55,47,0,0,0,0,0,64,0,-1--1--1,,1|(402,716)|
+10,57,">3mo - Supply Used by FromVisit2-7",647,710,68,20,8,3,0,0,0,0,0,0
+10,58,">3mo - Supply Used by FromVisit8PL",913,718,68,20,8,3,0,0,0,0,0,0
+1,59,24,57,0,0,0,0,0,64,0,-1--1--1,,1|(728,764)|
+1,60,18,57,0,0,0,0,0,64,0,-1--1--1,,1|(729,660)|
+1,61,21,57,0,0,0,0,0,64,0,-1--1--1,,1|(730,715)|
+10,62,"From2-7-HighD",795,839,63,10,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,63,62,57,0,0,0,0,0,64,0,-1--1--1,,1|(731,784)|
+10,64,"From2-7-LowD",801,648,61,10,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,65,64,57,0,0,0,0,0,64,0,-1--1--1,,1|(743,671)|
+10,66,"From2-7-MidD",787,748,58,11,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,67,66,57,0,0,0,0,0,64,0,-1--1--1,,1|(737,734)|
+1,68,25,58,0,0,0,0,0,64,0,-1--1--1,,1|(973,772)|
+1,69,19,58,0,0,0,0,0,64,0,-1--1--1,,1|(978,663)|
+1,70,22,58,0,0,0,0,0,64,0,-1--1--1,,1|(977,715)|
+10,71,"From8PL-HighD",1024,850,64,10,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,72,71,58,0,0,0,0,0,64,0,-1--1--1,,1|(977,794)|
+10,73,"From8PL-LowD",1032,646,62,10,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,74,73,58,0,0,0,0,0,64,0,-1--1--1,,1|(987,673)|
+10,75,"From8PL-MidD",1021,746,59,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,76,75,58,0,0,0,0,0,64,0,-1--1--1,,1|(986,736)|
+1,77,47,3,0,0,0,0,0,128,0,-1--1--1,,1|(297,521)|
+1,78,57,3,0,0,0,0,0,128,0,-1--1--1,,1|(506,531)|
+1,79,58,3,0,0,0,0,0,128,0,-1--1--1,,1|(640,534)|
+1,80,26,47,0,0,0,0,0,128,0,-1--1--1,,1|(523,586)|
+1,81,26,57,0,0,0,0,0,128,0,-1--1--1,,1|(721,595)|
+1,82,26,58,0,0,0,0,0,128,0,-1--1--1,,1|(846,599)|
+12,83,0,903,564,82,20,8,7,0,40,-1,0,0,0,-1--1--1,0-0-0,Meiryo|10||0-0-0
+Frequencies only include visits that happened.
+10,84,Reallocation of Supply to Psychotherapy,205,358,74,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-255
+1,85,84,1,0,0,0,0,0,128,0,-1--1--1,,1|(205,307)|
+10,86,Baseline Appointment Supply,108,294,48,26,8,131,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,87,86,1,0,0,0,0,0,128,0,-1--1--1,,1|(162,271)|
+10,88,Change in New Patient Slots,448,139,52,20,8,131,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-255
+1,89,88,2,0,0,0,0,0,128,0,-1--1--1,,1|(387,163)|
+10,90,Supply Used by All Pts,361,248,51,20,8,3,0,0,0,0,0,0
+1,91,41,90,0,0,0,0,0,128,0,-1--1--1,,1|(417,282)|
+1,92,90,2,0,0,0,0,0,128,0,-1--1--1,,1|(342,226)|
+10,93,"Percent Change RVI of Patients in Care >3mo",725,945,77,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-255
+1,94,93,47,0,0,0,0,0,128,0,-1--1--1,,1|(490,819)|
+1,95,93,57,0,0,0,0,0,128,0,-1--1--1,,1|(688,834)|
+1,96,93,58,0,0,0,0,0,128,0,-1--1--1,,1|(814,836)|
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*Psychotherapy Service
+$192-192-192,0,Meiryo|10||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,70,0
+10,1,"<3mo Visit 1",451,433,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,2,48,288,424,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,3,5,1,4,0,0,22,0,0,0,-1--1--1,,1|(385,430)|
+1,4,5,2,100,0,0,22,0,0,0,-1--1--1,,1|(322,430)|
+11,5,48,352,430,6,8,34,3,0,0,1,0,0,0
+10,6,"Starting Psychotherapy- 1",352,458,59,20,40,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,7,48,621,432,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,8,10,7,4,0,0,22,0,0,0,-1--1--1,,1|(584,432)|
+1,9,10,1,100,0,0,22,0,0,0,-1--1--1,,1|(518,432)|
+11,10,48,551,432,6,8,34,3,0,0,1,0,0,0
+10,11,Ending 1,551,451,30,11,40,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,12,Avg Time in Visit 1,511,375,40,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,13,12,10,0,0,0,0,0,64,0,-1--1--1,,1|(533,405)|
+1,14,1,10,1,0,0,0,0,64,0,-1--1--1,,1|(505,404)|
+10,15,"<3mo Visit 2-7-n->3mo",864,428,47,19,3,131,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,16,48,694,420,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,17,19,15,4,0,0,22,0,0,0,-1--1--1,,1|(791,420)|
+1,18,19,16,100,0,0,22,0,0,0,-1--1--1,,1|(729,420)|
+11,19,48,760,420,6,8,34,3,0,0,1,0,0,0
+10,20,"Starting Psychotherapy- 2-7-n->3mo",760,458,53,30,40,131,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,21,48,1027,428,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,22,24,21,4,0,0,22,0,0,0,-1--1--1,,1|(990,428)|
+1,23,24,15,100,0,0,22,0,0,0,-1--1--1,,1|(931,428)|
+11,24,48,957,428,6,8,34,3,0,0,1,0,0,0
+10,25,"Ending 2-7-n->3mo",957,456,43,20,40,131,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,26,"Avg Time in Visit 2-7-n->3mo",1022,383,55,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,27,26,24,0,0,0,0,0,64,0,-1--1--1,,1|(983,409)|
+1,28,15,24,1,0,0,0,0,64,0,-1--1--1,,1|(911,400)|
+10,29,"<3mo Visit 8PL",1274,429,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,30,48,1111,420,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,31,33,29,4,0,0,22,0,0,0,-1--1--1,,1|(1208,420)|
+1,32,33,30,100,0,0,22,0,0,0,-1--1--1,,1|(1146,420)|
+11,33,48,1177,420,6,8,34,3,0,0,1,0,0,0
+10,34,"Starting Psychotherapy- 8PL",1177,448,67,20,40,131,0,0,-1,0,0,0
+12,35,48,1444,428,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,36,38,35,4,0,0,22,0,0,0,-1--1--1,,1|(1407,428)|
+1,37,38,29,100,0,0,22,0,0,0,-1--1--1,,1|(1341,428)|
+11,38,48,1374,428,6,8,34,3,0,0,1,0,0,0
+10,39,Ending 8PL,1374,447,37,11,40,3,0,0,-1,0,0,0
+10,40,Avg Time in Visit 8PL,1426,371,55,20,8,3,0,0,0,0,0,0
+1,41,40,38,0,0,0,0,0,64,0,-1--1--1,,1|(1397,401)|
+1,42,29,38,1,0,0,0,0,64,0,-1--1--1,,1|(1328,400)|
+1,43,11,20,1,0,0,0,0,64,0,-1--1--1,,1|(626,477)|
+10,44,"% Go on to 2-7 in <3mo",643,179,59,20,8,3,0,0,0,0,0,0
+1,45,44,20,0,0,0,0,0,64,0,-1--1--1,,1|(696,307)|
+10,46,"From1-LowD",311,619,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,47,48,147,616,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,48,50,46,4,0,0,22,0,0,0,-1--1--1,,1|(245,618)|
+1,49,50,47,100,0,0,22,0,0,0,-1--1--1,,1|(182,618)|
+11,50,48,213,618,6,8,34,3,0,0,1,0,0,0
+10,51,"From1-PL3mo into Low D",213,646,62,20,40,3,0,0,-1,0,0,0
+12,52,48,480,624,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,53,55,52,4,0,0,22,0,0,0,-1--1--1,,1|(443,625)|
+1,54,55,46,100,0,0,22,0,0,0,-1--1--1,,1|(378,625)|
+11,55,48,410,625,6,8,34,3,0,0,1,0,0,0
+10,56,"From1-+PLmo Ending Low D",410,653,48,20,40,3,0,0,-1,0,0,0
+1,57,46,55,1,0,0,0,0,64,0,-1--1--1,,1|(367,593)|
+10,58,"From1-MidD",311,746,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,59,48,148,735,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,60,62,58,4,0,0,22,0,0,0,-1--1--1,,1|(246,737)|
+1,61,62,59,100,0,0,22,0,0,0,-1--1--1,,1|(183,737)|
+11,62,48,214,737,6,8,34,3,0,0,1,0,0,0
+10,63,"From1-PL3mo into Mid D",214,765,62,20,40,3,0,0,-1,0,0,0
+12,64,48,481,743,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,65,67,64,4,0,0,22,0,0,0,-1--1--1,,1|(444,744)|
+1,66,67,58,100,0,0,22,0,0,0,-1--1--1,,1|(378,744)|
+11,67,48,411,744,6,8,34,3,0,0,1,0,0,0
+10,68,"From1-+PLmo Ending Mid D",411,772,48,20,40,3,0,0,-1,0,0,0
+1,69,58,67,1,0,0,0,0,64,0,-1--1--1,,1|(365,715)|
+10,70,"From1-HighD",321,859,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,71,48,158,848,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,72,74,70,4,0,0,22,0,0,0,-1--1--1,,1|(256,850)|
+1,73,74,71,100,0,0,22,0,0,0,-1--1--1,,1|(193,850)|
+11,74,48,224,850,6,8,34,3,0,0,1,0,0,0
+10,75,"From1-PL3mo into High D",224,878,62,20,40,3,0,0,-1,0,0,0
+12,76,48,491,856,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,77,79,76,4,0,0,22,0,0,0,-1--1--1,,1|(454,857)|
+1,78,79,70,100,0,0,22,0,0,0,-1--1--1,,1|(388,857)|
+11,79,48,421,857,6,8,34,3,0,0,1,0,0,0
+10,80,"From1-PL3mo Ending High D",421,885,48,20,40,3,0,0,-1,0,0,0
+1,81,70,79,1,0,0,0,0,64,0,-1--1--1,,1|(375,828)|
+10,82,"PL3mo % starting MidD",259,708,59,20,8,3,0,0,0,0,0,0
+10,83,"PL3mo % starting HighD",274,823,59,20,8,3,0,0,0,0,0,0
+1,84,83,74,0,0,0,0,0,64,0,-1--1--1,,1|(240,841)|
+1,85,82,63,0,0,0,0,0,64,0,-1--1--1,,1|(242,731)|
+10,86,"PL3mo % starting LowD",272,578,59,20,8,3,0,0,0,0,0,0
+1,87,86,50,0,0,0,0,0,128,0,-1--1--1,,1|(237,602)|
+10,88,"%Visit1-n-Done",85,783,53,11,8,3,0,0,0,0,0,0
+1,89,88,50,0,0,0,0,0,128,0,-1--1--1,,1|(148,702)|
+1,90,10,62,1,0,0,0,0,128,0,-1--1--1,,1|(258,539)|
+1,91,10,74,1,0,0,0,0,128,0,-1--1--1,,1|(221,548)|
+1,92,10,50,1,0,0,0,0,128,0,-1--1--1,,1|(283,538)|
+10,93,"% Go on to 2-7 in <3mo",64,674,65,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,94,93,50,1,0,0,0,0,128,0,-1--1--1,,1|(138,657)|
+1,95,93,62,1,0,0,0,0,128,0,-1--1--1,,1|(122,707)|
+1,96,93,74,1,0,0,0,0,128,0,-1--1--1,,1|(184,828)|
+1,97,88,62,0,0,0,0,0,128,0,-1--1--1,,1|(156,757)|
+1,98,88,74,0,0,0,0,0,128,0,-1--1--1,,1|(157,817)|
+10,99,"From2-7-LowD",840,651,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,100,48,677,642,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,101,103,99,4,0,0,22,0,0,0,-1--1--1,,1|(774,642)|
+1,102,103,100,100,0,0,22,0,0,0,-1--1--1,,1|(712,642)|
+11,103,48,743,642,6,8,34,3,0,0,1,0,0,0
+10,104,"From2-7-PL3mo into Low D",743,670,55,20,40,3,0,0,-1,0,0,0
+12,105,48,1010,650,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,106,108,105,4,0,0,22,0,0,0,-1--1--1,,1|(973,649)|
+1,107,108,99,100,0,0,22,0,0,0,-1--1--1,,1|(907,649)|
+11,108,48,940,649,6,8,34,3,0,0,1,0,0,0
+10,109,"From2-7-PL3mo Ending Low D",940,677,55,20,40,3,0,0,-1,0,0,0
+10,110,"From2-7-PL3mo Avg Time in Lower Q",1002,607,69,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,111,110,108,0,0,0,0,0,64,0,-1--1--1,,1|(964,632)|
+1,112,99,108,1,0,0,0,0,64,0,-1--1--1,,1|(894,622)|
+10,113,"From2-7-MidD",841,770,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,114,48,678,766,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,115,117,113,4,0,0,22,0,0,0,-1--1--1,,1|(775,763)|
+1,116,117,114,100,0,0,22,0,0,0,-1--1--1,,1|(713,763)|
+11,117,48,744,763,6,8,34,3,0,0,1,0,0,0
+10,118,"From2-7-PL3mo into Mid D",744,791,55,20,40,3,0,0,-1,0,0,0
+12,119,48,1011,769,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,120,122,119,4,0,0,22,0,0,0,-1--1--1,,1|(974,768)|
+1,121,122,113,100,0,0,22,0,0,0,-1--1--1,,1|(908,768)|
+11,122,48,941,768,6,8,34,3,0,0,1,0,0,0
+10,123,"From2-7-PL3mo Ending Mid D",941,796,55,20,40,3,0,0,-1,0,0,0
+10,124,"From2-7-PL3mo Avg Time in Mid Qs",1006,731,69,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,125,124,122,0,0,0,0,0,64,0,-1--1--1,,1|(964,754)|
+1,126,113,122,1,0,0,0,0,64,0,-1--1--1,,1|(895,741)|
+10,127,"From2-7-HighD",851,883,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,128,48,688,882,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,129,131,127,4,0,0,22,0,0,0,-1--1--1,,1|(785,879)|
+1,130,131,128,100,0,0,22,0,0,0,-1--1--1,,1|(723,879)|
+11,131,48,754,879,6,8,34,3,0,0,1,0,0,0
+10,132,"From2-7-PL3mo into High D",754,907,55,20,40,3,0,0,-1,0,0,0
+12,133,48,1021,886,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,134,136,133,4,0,0,22,0,0,0,-1--1--1,,1|(984,881)|
+1,135,136,127,100,0,0,22,0,0,0,-1--1--1,,1|(918,881)|
+11,136,48,951,881,6,8,34,3,0,0,1,0,0,0
+10,137,"From2-7-PL3mo Ending High D",951,909,55,20,40,3,0,0,-1,0,0,0
+10,138,"From2-7-PL3mo Avg Time in Upper Q",1021,839,69,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,139,138,136,0,0,0,0,0,64,0,-1--1--1,,1|(978,864)|
+1,140,127,136,1,0,0,0,0,64,0,-1--1--1,,1|(905,854)|
+10,141,"%Visit2-7-n-Done",609,278,60,11,8,3,0,0,0,0,0,0
+1,142,25,104,1,0,0,0,0,64,0,-1--1--1,,1|(764,545)|
+1,143,25,118,1,0,0,0,0,64,0,-1--1--1,,1|(719,547)|
+1,144,25,132,1,0,0,0,0,64,0,-1--1--1,,1|(662,574)|
+10,145,"PL3mo % starting LowD",846,589,65,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,146,"PL3mo % starting MidD",784,729,65,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,147,"PL3mo % starting HighD",800,833,65,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,148,145,103,0,0,0,0,0,128,0,-1--1--1,,1|(784,620)|
+1,149,146,117,0,0,0,0,0,128,0,-1--1--1,,1|(760,749)|
+1,150,147,132,0,0,0,0,0,128,0,-1--1--1,,1|(780,864)|
+10,151,"From8PL-LowD",1393,651,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,152,48,1230,642,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,153,155,151,4,0,0,22,0,0,0,-1--1--1,,1|(1327,644)|
+1,154,155,152,100,0,0,22,0,0,0,-1--1--1,,1|(1265,644)|
+11,155,48,1296,644,6,8,34,3,0,0,1,0,0,0
+10,156,"From8PL-PL3mo into Low D",1296,672,55,20,40,3,0,0,-1,0,0,0
+12,157,48,1563,650,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,158,160,157,4,0,0,22,0,0,0,-1--1--1,,1|(1526,652)|
+1,159,160,151,100,0,0,22,0,0,0,-1--1--1,,1|(1460,652)|
+11,160,48,1493,652,6,8,34,3,0,0,1,0,0,0
+10,161,"From8PL-PL3mo Ending Low D",1493,680,55,20,40,3,0,0,-1,0,0,0
+10,162,"From8PL-PL3mo Avg Time in Lower Q",1555,600,70,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,163,162,160,0,0,0,0,0,64,0,-1--1--1,,1|(1519,629)|
+1,164,151,160,1,0,0,0,0,64,0,-1--1--1,,1|(1447,622)|
+10,165,"From8PL-MidD",1394,770,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,166,48,1231,761,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,167,169,165,4,0,0,22,0,0,0,-1--1--1,,1|(1328,763)|
+1,168,169,166,100,0,0,22,0,0,0,-1--1--1,,1|(1266,763)|
+11,169,48,1297,763,6,8,34,3,0,0,1,0,0,0
+10,170,"From8PL-PL3mo into Mid D",1297,791,55,20,40,3,0,0,-1,0,0,0
+12,171,48,1564,769,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,172,174,171,4,0,0,22,0,0,0,-1--1--1,,1|(1527,771)|
+1,173,174,165,100,0,0,22,0,0,0,-1--1--1,,1|(1461,771)|
+11,174,48,1494,771,6,8,34,3,0,0,1,0,0,0
+10,175,"From8PL-PL3mo Ending Mid D",1494,799,55,20,40,3,0,0,-1,0,0,0
+10,176,"From8PL-PL3mo Avg Time in Mid Qs",1559,724,70,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,177,176,174,0,0,0,0,0,64,0,-1--1--1,,1|(1520,751)|
+1,178,165,174,1,0,0,0,0,64,0,-1--1--1,,1|(1448,741)|
+10,179,"From8PL-HighD",1404,883,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,180,48,1241,880,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,181,183,179,4,0,0,22,0,0,0,-1--1--1,,1|(1338,880)|
+1,182,183,180,100,0,0,22,0,0,0,-1--1--1,,1|(1276,880)|
+11,183,48,1307,880,6,8,34,3,0,0,1,0,0,0
+10,184,"From8PL-PL3mo into High D",1307,908,55,20,40,3,0,0,-1,0,0,0
+12,185,48,1574,882,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,186,188,185,4,0,0,22,0,0,0,-1--1--1,,1|(1537,884)|
+1,187,188,179,100,0,0,22,0,0,0,-1--1--1,,1|(1471,884)|
+11,188,48,1504,884,6,8,34,3,0,0,1,0,0,0
+10,189,"From8PL-PL3mo Ending High D",1504,912,55,20,40,3,0,0,-1,0,0,0
+10,190,"From8PL-PL3mo Avg Time in Upper Q",1574,835,70,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,191,190,188,0,0,0,0,0,64,0,-1--1--1,,1|(1532,863)|
+1,192,179,188,1,0,0,0,0,64,0,-1--1--1,,1|(1458,854)|
+10,193,"%Visit8PL-n-Done",1151,792,40,21,8,3,0,0,0,0,0,0
+1,194,193,156,0,0,0,0,0,128,0,-1--1--1,,1|(1218,735)|
+1,195,193,170,0,0,0,0,0,128,0,-1--1--1,,1|(1209,791)|
+1,196,193,183,0,0,0,0,0,128,0,-1--1--1,,1|(1238,841)|
+10,197,"PL3mo % starting LowD",1342,602,65,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,198,"PL3mo % starting MidD",1342,730,65,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,199,"PL3mo % starting HighD",1351,844,65,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,200,197,155,0,0,0,0,0,128,0,-1--1--1,,1|(1315,626)|
+1,201,198,169,0,0,0,0,0,128,0,-1--1--1,,1|(1313,750)|
+1,202,199,184,0,0,0,0,0,128,0,-1--1--1,,1|(1333,870)|
+1,203,39,155,1,0,0,0,0,128,0,-1--1--1,,1|(1332,512)|
+1,204,39,169,1,0,0,0,0,128,0,-1--1--1,,1|(1322,518)|
+1,205,39,183,1,0,0,0,0,128,0,-1--1--1,,1|(1297,534)|
+10,206,New Patient Scheduling Efficiency,167,247,70,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||64-160-98
+10,207,Pts per Appt,305,249,41,11,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,208,Starting Psychotherapy,306,322,49,20,8,131,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,209,Supply Available for New Pts,-18,320,60,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,210,206,208,0,0,0,0,0,128,0,-1--1--1,,1|(231,281)|
+1,211,207,208,0,0,0,0,0,128,0,-1--1--1,,1|(306,274)|
+10,212,EightPlusAfter,1475,969,46,11,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,213,179,212,0,0,0,0,0,128,0,-1--1--1,,1|(1438,925)|
+1,214,165,212,0,0,0,0,0,128,0,-1--1--1,,1|(1433,867)|
+1,215,151,212,0,0,0,0,0,128,0,-1--1--1,,1|(1433,807)|
+10,216,TwoSevenAfter,932,1000,51,11,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,217,127,216,0,0,0,0,0,128,0,-1--1--1,,1|(889,940)|
+1,218,113,216,0,0,0,0,0,128,0,-1--1--1,,1|(884,882)|
+1,219,99,216,0,0,0,0,0,128,0,-1--1--1,,1|(885,823)|
+10,220,OneAfter,358,960,31,11,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,221,70,220,0,0,0,0,0,128,0,-1--1--1,,1|(339,907)|
+1,222,58,220,0,0,0,0,0,128,0,-1--1--1,,1|(334,850)|
+1,223,46,220,0,0,0,0,0,128,0,-1--1--1,,1|(335,787)|
+10,224,"<3mo Visit 2-7 -n-done",898,99,40,20,3,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,225,48,735,94,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,226,228,224,4,0,0,22,0,0,0,-1--1--1,,1|(828,97)|
+1,227,228,225,100,0,0,22,0,0,0,-1--1--1,,1|(765,97)|
+11,228,48,792,97,6,8,34,3,0,0,1,0,0,0
+10,229,"Starting Psychotherapy 2-7-n-Done",792,125,78,20,40,131,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,230,48,1131,100,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,231,233,230,4,0,0,22,0,0,0,-1--1--1,,1|(1078,100)|
+1,232,233,224,100,0,0,22,0,0,0,-1--1--1,,1|(980,100)|
+11,233,48,1029,100,6,8,34,3,0,0,1,0,0,0
+10,234,"Ending 2-7-n-Done",1029,128,41,20,40,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,235,10,229,1,0,0,0,0,128,0,-1--1--1,,1|(660,292)|
+1,236,141,229,1,0,0,0,0,128,0,-1--1--1,,1|(697,198)|
+1,237,224,233,1,0,0,0,0,128,0,-1--1--1,,1|(979,68)|
+10,238,"Avg Time in Visit 2-7-n-Done",1094,35,55,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,239,238,233,0,0,0,0,0,128,0,-1--1--1,,1|(1058,70)|
+10,240,"<3mo Visit 2-7-n-More<3mo",903,265,53,19,3,131,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,241,242,240,4,0,0,22,2,0,0,-1--1--1,|12||0-0-0,1|(816,269)|
+11,242,3004,776,269,6,8,34,3,0,0,1,0,0,0
+10,243,"Starting Psychotherapy 2-7-n-More<3mo",776,297,78,20,40,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,244,48,1123,267,10,8,0,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,245,247,244,4,0,0,22,0,0,0,-1--1--1,,1|(1080,267)|
+1,246,247,240,100,0,0,22,0,0,0,-1--1--1,,1|(995,267)|
+11,247,48,1041,267,6,8,34,3,0,0,1,0,0,0
+10,248,"Ending 2-7-n-More<3mo",1041,295,59,20,40,3,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,249,240,247,1,0,0,0,0,128,0,-1--1--1,,1|(1002,233)|
+10,250,"Avg Time in Visit 2-7-More<3mo",1086,202,55,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,251,250,247,0,0,0,0,0,128,0,-1--1--1,,1|(1062,236)|
+1,252,11,243,1,0,0,0,0,128,0,-1--1--1,,1|(711,298)|
+1,253,44,243,0,0,0,0,0,128,0,-1--1--1,,1|(703,233)|
+1,254,44,229,0,0,0,0,0,128,0,-1--1--1,,1|(710,154)|
+1,255,248,33,1,0,0,0,0,128,0,-1--1--1,,1|(1152,318)|
+10,256,"%Visit2-7-n-More<3mo",844,342,40,21,8,3,0,0,0,0,0,0
+1,257,256,243,0,0,0,0,0,128,0,-1--1--1,,1|(815,322)|
+1,258,256,19,0,0,0,0,0,128,0,-1--1--1,,1|(798,384)|
+1,259,141,20,0,0,0,0,0,128,0,-1--1--1,,1|(671,353)|
+10,260,"# of Pts in Psych >3 mo",933,1074,55,20,8,3,0,0,0,0,0,0
+1,261,220,260,0,0,0,0,0,128,0,-1--1--1,,1|(626,1013)|
+1,262,216,260,0,0,0,0,0,128,0,-1--1--1,,1|(932,1025)|
+1,263,212,260,0,0,0,0,0,128,0,-1--1--1,,1|(1215,1018)|
+1,264,12,40,1,0,0,0,0,128,0,-1--1--1,,1|(1217,340)|
+1,265,250,40,1,0,0,0,0,128,0,-1--1--1,,1|(1322,241)|
+12,266,0,378,1065,146,40,8,7,0,40,-1,0,0,0,-1--1--1,0-0-0,Meiryo|10||0-0-0
+For >3mo, the data pull will always underestimate the actual # of pts, because we're only including pts with 1 or more visits in this past quarter.
+10,267,TwoSevenBefore,864,23,56,11,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,268,15,267,0,0,0,0,0,128,0,-1--1--1,,1|(864,228)|
+1,269,240,267,0,0,0,0,0,128,0,-1--1--1,,1|(883,146)|
+1,270,224,267,0,0,0,0,0,128,0,-1--1--1,,1|(882,62)|
+12,271,48,731,265,10,8,0,3,0,0,-1,0,0,0
+1,272,242,271,100,0,0,22,0,0,0,-1--1--1,,1|(755,269)|
+10,273,"Change in %2-7-n-Done",479,287,47,20,8,3,0,2,-1,0,0,0,-1--1--1,0-0-0,|10||255-0-255
+10,274,"% Go on to 2-7 Data in <3mo",486,217,97,11,0,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,275,274,44,0,0,0,0,0,128,0,-1--1--1,,1|(550,201)|
+1,276,273,141,0,0,0,0,0,128,0,-1--1--1,,1|(531,283)|
+10,277,"%Visit2-7-n-Done Data",475,244,77,11,0,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,278,277,141,0,0,0,0,0,128,0,-1--1--1,,1|(534,259)|
+10,279,"Change in % Go on to 2-7 in <3mo",492,172,73,20,8,3,0,2,-1,0,0,0,-1--1--1,0-0-0,|10||255-0-255
+1,280,279,44,0,0,0,0,0,128,0,-1--1--1,,1|(567,175)|
+10,281,"%Visit2-7-n-More<3mo Data",1000,347,80,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,282,281,256,0,0,0,0,0,128,0,-1--1--1,,1|(908,344)|
+10,283,"Change in %2-7-n-More<3mo",482,328,66,20,8,3,0,2,-1,0,0,0,-1--1--1,0-0-0,|10||255-0-255
+1,284,283,256,0,0,0,0,0,128,0,-1--1--1,,1|(669,334)|
+10,285,"Change in %Visit1-n-Done",-53,717,54,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-255
+10,286,"%Visit1-n-Done Data",-43,829,54,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,287,285,88,0,0,0,0,0,128,0,-1--1--1,,1|(19,751)|
+1,288,286,88,0,0,0,0,0,128,0,-1--1--1,,1|(27,804)|
+10,289,"Change in %Visit8PL-n-Done",1158,870,61,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-255
+10,290,"%Visit8PL-n-Done Data",1148,703,61,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,291,290,193,0,0,0,0,0,128,0,-1--1--1,,1|(1148,740)|
+1,292,289,193,0,0,0,0,0,128,0,-1--1--1,,1|(1155,838)|
+10,293,"From1-PL3mo Avg Time in Lower Q",496,581,62,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+10,294,"From1-PL3mo Avg Time in Mid Qs",507,700,62,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+10,295,"From1-PL3mo Avg Time in Upper Q",514,812,62,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+1,296,293,55,0,0,0,0,0,128,0,-1--1--1,,1|(443,608)|
+1,297,294,67,0,0,0,0,0,128,0,-1--1--1,,1|(447,727)|
+1,298,295,79,0,0,0,0,0,128,0,-1--1--1,,1|(457,839)|
+1,299,208,5,0,0,0,0,0,128,0,-1--1--1,,1|(330,376)|
+10,300,Time to Percieve Supply for New Pts,138,396,63,20,8,3,0,0,0,0,0,0
+10,301,Percieved New Pt Appt Supply,139,321,46,24,3,131,0,0,0,0,0,0
+1,302,209,301,0,0,0,0,0,128,0,-1--1--1,,1|(61,320)|
+1,303,300,301,0,0,0,0,0,128,0,-1--1--1,,1|(139,367)|
+1,304,301,208,0,0,0,0,0,128,0,-1--1--1,,1|(214,321)|
+10,305,Graduation Rate,1437,503,54,11,8,3,0,0,0,0,0,0
+1,306,39,305,0,0,0,0,0,128,0,-1--1--1,,1|(1399,470)|
+1,307,193,305,0,0,0,0,0,128,0,-1--1--1,,1|(1293,647)|
+10,308,"Percent Change Duration of Pts in Care >3mo",650,1129,75,30,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-255
+1,309,308,80,0,0,0,0,0,128,0,-1--1--1,,1|(535,1007)|
+1,310,308,68,0,0,0,0,0,128,0,-1--1--1,,1|(532,951)|
+1,311,308,56,0,0,0,0,0,128,0,-1--1--1,,1|(532,892)|
+1,312,308,137,0,0,0,0,0,128,0,-1--1--1,,1|(801,1018)|
+1,313,308,123,0,0,0,0,0,128,0,-1--1--1,,1|(794,962)|
+1,314,308,109,0,0,0,0,0,128,0,-1--1--1,,1|(794,903)|
+1,315,308,189,0,0,0,0,0,128,0,-1--1--1,,1|(1080,1019)|
+1,316,308,175,0,0,0,0,0,128,0,-1--1--1,,1|(1076,962)|
+1,317,308,161,0,0,0,0,0,128,0,-1--1--1,,1|(1074,902)|
+10,318,OneVisit,466,528,28,11,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+10,319,"2-7WithinThreeMonths",960,528,48,21,8,131,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+10,320,"8PlusWithinThreeMonths",1162,532,82,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+10,321,"BackAfterThreeMonthy-FromOneVisit",292,1201,124,10,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-128-0
+10,322,"BackAfterThreeMonthy-From8Plus",1653,1130,114,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+10,323,"BackAfterThreeMonthy-From2-7",1397,1133,108,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+10,324,"DoneForever-FromOneVisit",753,1197,91,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+10,325,"DoneForever-From2-7",960,1184,75,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+10,326,"DoneForever-From8Plus",1135,1196,81,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+10,327,"DoneForever-Total",932,1301,64,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+10,328,"BackAfterThreeMonths-Total",966,1388,96,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+1,329,324,327,0,0,0,0,0,128,0,-1--1--1,,1|(835,1245)|
+1,330,325,327,0,0,0,0,0,128,0,-1--1--1,,1|(947,1235)|
+1,331,326,327,0,0,0,0,0,128,0,-1--1--1,,1|(1039,1245)|
+1,332,321,328,0,0,0,0,0,128,0,-1--1--1,,1|(621,1292)|
+1,333,323,328,0,0,0,0,0,128,0,-1--1--1,,1|(1187,1256)|
+1,334,322,328,0,0,0,0,0,128,0,-1--1--1,,1|(1316,1256)|
+1,335,88,324,0,0,0,0,0,128,0,-1--1--1,,1|(414,986)|
+1,336,193,326,0,0,0,0,0,128,0,-1--1--1,,1|(1143,992)|
+1,337,320,326,0,0,0,0,0,128,0,-1--1--1,,1|(1148,857)|
+1,338,318,324,0,0,0,0,0,128,0,-1--1--1,,1|(606,856)|
+10,339,"ModelCohort-Total",577,526,63,10,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-128-0
+1,340,318,339,0,0,0,0,0,128,0,-1--1--1,,1|(497,527)|
+10,341,FINAL TIME,577,557,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,342,341,339,0,0,0,0,0,64,0,-1--1--1,,1|(577,548)|
+10,343,Time,577,557,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,344,343,339,0,0,0,0,0,64,0,-1--1--1,,1|(577,548)|
+10,345,E2,1047,525,10,11,8,3,0,0,0,0,0,0
+10,346,FINAL TIME,1026,556,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,347,346,345,0,0,0,0,0,64,0,-1--1--1,,1|(1032,546)|
+10,348,Time,1058,570,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,349,348,345,0,0,0,0,0,64,0,-1--1--1,,1|(1054,554)|
+1,350,319,345,0,0,0,0,0,128,0,-1--1--1,,1|(1015,526)|
+10,351,E3,731,1238,10,11,8,3,0,0,0,0,0,0
+1,352,324,351,0,0,0,0,0,128,0,-1--1--1,,1|(745,1210)|
+10,353,FINAL TIME,731,1269,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,354,353,351,0,0,0,0,0,64,0,-1--1--1,,1|(731,1260)|
+10,355,Time,731,1269,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,356,355,351,0,0,0,0,0,64,0,-1--1--1,,1|(731,1260)|
+10,357,E4,263,1243,10,11,8,3,0,0,0,0,0,0
+1,358,321,357,0,0,0,0,0,128,0,-1--1--1,,1|(283,1215)|
+10,359,FINAL TIME,263,1274,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,360,359,357,0,0,0,0,0,64,0,-1--1--1,,1|(263,1265)|
+10,361,Time,263,1274,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,362,361,357,0,0,0,0,0,64,0,-1--1--1,,1|(263,1265)|
+10,363,E5,994,1217,10,11,8,3,0,0,0,0,0,0
+1,364,325,363,0,0,0,0,0,128,0,-1--1--1,,1|(971,1195)|
+10,365,FINAL TIME,994,1248,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,366,365,363,0,0,0,0,0,64,0,-1--1--1,,1|(994,1239)|
+10,367,Time,994,1248,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,368,367,363,0,0,0,0,0,64,0,-1--1--1,,1|(994,1239)|
+10,369,E6,1435,1173,10,11,8,3,0,0,0,0,0,0
+1,370,323,369,0,0,0,0,0,128,0,-1--1--1,,1|(1410,1147)|
+10,371,FINAL TIME,1435,1204,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,372,371,369,0,0,0,0,0,64,0,-1--1--1,,1|(1435,1195)|
+10,373,Time,1435,1204,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,374,373,369,0,0,0,0,0,64,0,-1--1--1,,1|(1435,1195)|
+10,375,E7,1189,555,10,11,8,3,0,0,0,0,0,0
+1,376,320,375,0,0,0,0,0,128,0,-1--1--1,,1|(1170,540)|
+10,377,FINAL TIME,1189,586,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,378,377,375,0,0,0,0,0,64,0,-1--1--1,,1|(1189,577)|
+10,379,Time,1189,586,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,380,379,375,0,0,0,0,0,64,0,-1--1--1,,1|(1189,577)|
+10,381,E8,1148,1227,10,11,8,3,0,0,0,0,0,0
+1,382,326,381,0,0,0,0,0,128,0,-1--1--1,,1|(1138,1204)|
+10,383,FINAL TIME,1148,1258,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,384,383,381,0,0,0,0,0,64,0,-1--1--1,,1|(1148,1249)|
+10,385,Time,1148,1258,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,386,385,381,0,0,0,0,0,64,0,-1--1--1,,1|(1148,1249)|
+10,387,E9,1697,1178,10,11,8,3,0,0,0,0,0,0
+1,388,322,387,0,0,0,0,0,128,0,-1--1--1,,1|(1669,1148)|
+10,389,FINAL TIME,1697,1209,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,390,389,387,0,0,0,0,0,64,0,-1--1--1,,1|(1697,1200)|
+10,391,Time,1697,1209,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,392,391,387,0,0,0,0,0,64,0,-1--1--1,,1|(1697,1200)|
+10,393,SankeyScalar,1399,168,45,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+10,394,OneVisitRate,357,534,43,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-128-0
+1,395,6,394,0,0,0,0,0,128,0,-1--1--1,,1|(355,493)|
+10,396,Time,357,565,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,397,396,394,0,0,0,0,0,64,0,-1--1--1,,1|(357,556)|
+1,398,394,318,0,0,0,0,0,128,0,-1--1--1,,1|(413,531)|
+10,399,"BackAfterThreeMonthy-FromOneVisitRate",248,1163,140,10,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-128-0
+1,400,399,321,0,0,0,0,0,128,0,-1--1--1,,1|(265,1177)|
+1,401,75,399,0,0,0,0,0,64,0,-1--1--1,,1|(236,1018)|
+1,402,51,399,0,0,0,0,0,64,0,-1--1--1,,1|(231,902)|
+1,403,63,399,0,0,0,0,0,64,0,-1--1--1,,1|(231,962)|
+10,404,Time,248,1193,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,405,404,399,0,0,0,0,0,64,0,-1--1--1,,1|(248,1184)|
+10,406,"DoneForever-From2-7Rate",955,1147,91,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+1,407,406,325,0,0,0,0,0,128,0,-1--1--1,,1|(956,1158)|
+1,408,229,406,0,0,0,0,0,64,0,-1--1--1,,1|(872,634)|
+10,409,Time,955,1177,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,410,409,406,0,0,0,0,0,64,0,-1--1--1,,1|(955,1168)|
+10,411,"2-7WithinThreeMonthsRate",855,527,53,16,8,131,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+1,412,411,319,0,0,0,0,0,128,0,-1--1--1,,1|(903,527)|
+1,413,229,411,0,0,0,0,0,64,0,-1--1--1,,1|(822,321)|
+1,414,243,411,0,0,0,0,0,64,0,-1--1--1,,1|(813,407)|
+1,415,20,411,0,0,0,0,0,64,0,-1--1--1,,1|(810,495)|
+10,416,Time,855,563,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,417,416,411,0,0,0,0,0,64,0,-1--1--1,,1|(855,554)|
+10,418,"8PlusWithinThreeMonthsRate",1163,497,98,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+1,419,418,320,0,0,0,0,0,128,0,-1--1--1,,1|(1162,507)|
+1,420,243,418,0,0,0,0,0,64,0,-1--1--1,,1|(972,398)|
+10,421,Time,1163,527,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,422,421,418,0,0,0,0,0,64,0,-1--1--1,,1|(1163,518)|
+10,423,"BackAfterThreeMonthy-From2-7Rate",1394,1098,124,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+1,424,423,323,0,0,0,0,0,128,0,-1--1--1,,1|(1394,1108)|
+1,425,20,423,0,0,0,0,0,64,0,-1--1--1,,1|(1081,783)|
+10,426,Time,1394,1128,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,427,426,423,0,0,0,0,0,64,0,-1--1--1,,1|(1394,1119)|
+10,428,"BackAfterThreeMonthy-From8PlusRate",1650,1100,130,10,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|10||255-128-0
+1,429,428,322,0,0,0,0,0,128,0,-1--1--1,,1|(1650,1108)|
+1,430,193,428,0,0,0,0,0,64,0,-1--1--1,,1|(1403,947)|
+1,431,243,428,0,0,0,0,0,64,0,-1--1--1,,1|(1212,698)|
+10,432,Time,1650,1130,28,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,433,432,428,0,0,0,0,0,64,0,-1--1--1,,1|(1650,1121)|
+10,434,Cohort Ratio,1520,276,40,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|0||255-128-0
+1,435,393,434,0,0,0,0,0,128,0,-1--1--1,,1|(1453,217)|
+1,436,339,434,0,0,0,0,0,128,0,-1--1--1,,1|(1040,402)|
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*Performance Measures
+$192-192-192,0,Meiryo|10||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,90,0
+10,1,"<3mo Visit 1",1579,1209,52,11,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,2,"<3mo Visit 2-7-n->3mo",1566,1118,48,20,8,130,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,3,"<3mo Visit 8PL",1563,992,57,11,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,4,"Total Pts <3months",1323,1077,35,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,5,1,4,0,0,0,0,0,128,0,-1--1--1,,1|(1464,1149)|
+1,6,2,4,0,0,0,0,0,128,0,-1--1--1,,1|(1444,1097)|
+1,7,3,4,0,0,0,0,0,128,0,-1--1--1,,1|(1451,1031)|
+10,8,EBP Bronze Standard for Depression,1312,269,72,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||128-64-0
+10,9,EBP Gold Standard for Depression,1680,270,63,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-192-0
+10,10,"% of pts <3mo w >7 templates or \"completion\" template for Depression",968,83,104,30,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,11,10,9,0,0,0,0,0,128,0,-1--1--1,,1|(1337,180)|
+10,12,"HS Pts<=3mo over Total for Depression",892,414,67,20,8,3,0,0,0,0,0,0
+10,13,Total Pts in Team,364,684,57,11,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+12,14,0,108,728,37,20,8,7,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+"# of Pts in MedMgmt"
+12,15,0,118,631,37,20,8,7,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+"# of Pts in Group"
+12,16,0,117,588,39,20,8,7,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+"# of Pts in Adjunctive"
+1,17,14,13,0,0,0,0,0,128,0,-1--1--1,,1|(219,708)|
+1,18,15,13,0,0,0,0,0,128,0,-1--1--1,,1|(226,653)|
+1,19,16,13,0,0,0,0,0,128,0,-1--1--1,,1|(238,635)|
+10,20,"Starting Psychotherapy- 1",913,1035,64,20,8,2,1,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,21,HS Gold Standard for Depression,1379,608,70,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-192-0
+10,22,"% of pts <3mo w/ >1 templates for Depression",976,136,83,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,23,"<3mo Visit 2-7 -n-done",1572,1175,55,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,24,"<3mo Visit 2-7-n-More<3mo",1572,1057,65,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,25,23,4,0,0,0,0,0,128,0,-1--1--1,,1|(1446,1125)|
+1,26,24,4,0,0,0,0,0,128,0,-1--1--1,,1|(1439,1067)|
+10,27,EBP Silver Standard for Depression,1502,271,66,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||160-160-160
+10,28,"% of pts <3mo w >0 Templates for Depression",987,187,85,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,29,28,8,0,0,0,0,0,128,0,-1--1--1,,1|(1146,226)|
+10,30,HS Silver Standard for Depression,1213,603,62,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,31,22,27,0,0,0,0,0,128,0,-1--1--1,,1|(1237,204)|
+10,32,"Starting Psychotherapy- 1",920,460,64,20,8,2,1,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+10,33,"Starting Psychotherapy- 1",1070,566,64,20,8,2,1,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+12,34,0,108,676,40,20,8,7,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+"# of Pts in CareCoord"
+1,35,34,13,0,0,0,0,0,128,0,-1--1--1,,1|(220,679)|
+1,36,4,13,1,0,0,0,0,128,0,-1--1--1,,1|(1198,1379)|
+12,37,0,119,540,57,11,8,7,0,40,-1,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+# of Pts in Intake
+1,38,37,13,0,0,0,0,0,128,0,-1--1--1,,1|(234,608)|
+1,39,27,9,0,0,0,0,0,128,0,-1--1--1,,1|(1585,270)|
+10,40,"% of Total Pts w/Depression",704,365,47,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,41,"% of Total Pts <3mo w/Depression",571,1095,69,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,42,"% of Total Pts <3mo w/PTSD",704,1093,49,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,43,"% of Total Pts <3mo w/AUD",807,1092,47,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,44,"% of Total Pts <3mo w/OUD",919,1094,47,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,45,"# of Pts in Psych >3 mo",108,793,60,20,8,2,0,43,-1,0,0,0,128-128-128,0-0-0,Meiryo|10||128-128-128
+1,46,45,13,0,0,0,0,0,128,0,-1--1--1,,1|(239,736)|
+10,47,"% of Total Pts w/PTSD",584,367,47,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,48,"% of Total Pts w/AUD",479,370,47,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,49,"% of Total Pts w/OUD",380,373,47,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,50,30,27,0,0,0,0,0,128,0,-1--1--1,,1|(1352,442)|
+10,51,"HS Pts<=3mo over Total for PTSD",893,486,64,20,8,3,0,0,0,0,0,0
+10,52,HS Gold Standard for PTSD,1380,680,59,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-192-0
+10,53,HS Silver Standard for PTSD,1214,675,62,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,54,"# Total Pts in Team with Depression",714,433,66,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,55,"# Total Pts in Team w/PTSD",715,495,66,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,56,"# Total Pts in Team w/AUD",709,562,66,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,57,"# Total Pts in Team w/OUD",700,624,66,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,58,40,54,0,0,0,0,0,128,0,-1--1--1,,1|(707,392)|
+1,59,47,55,0,0,0,0,0,128,0,-1--1--1,,1|(643,426)|
+1,60,48,56,0,0,0,0,0,128,0,-1--1--1,,1|(588,461)|
+1,61,49,57,0,0,0,0,0,128,0,-1--1--1,,1|(533,494)|
+1,62,54,12,0,0,0,0,0,128,0,-1--1--1,,1|(795,424)|
+10,63,"# Total Pts <3mo w/2-7 Visits",1242,976,59,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,64,23,63,0,0,0,0,0,128,0,-1--1--1,,1|(1412,1079)|
+1,65,2,63,0,0,0,0,0,128,0,-1--1--1,,1|(1410,1049)|
+1,66,24,63,0,0,0,0,0,128,0,-1--1--1,,1|(1410,1017)|
+10,67,"# Pts <3mo in Team with Depression",583,1020,69,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,68,"# Pts <3mo in Team w/PTSD",576,959,48,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,69,"# Pts <3mo in Team w/AUD",578,892,48,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+10,70,"# Pts <3mo in Team w/OUD",580,845,48,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,71,4,70,0,0,0,0,0,128,0,-1--1--1,,1|(964,965)|
+1,72,4,69,0,0,0,0,0,128,0,-1--1--1,,1|(963,987)|
+1,73,4,68,0,0,0,0,0,128,0,-1--1--1,,1|(962,1020)|
+1,74,4,67,0,0,0,0,0,128,0,-1--1--1,,1|(976,1050)|
+1,75,41,67,0,0,0,0,0,128,0,-1--1--1,,1|(575,1064)|
+1,76,42,68,0,0,0,0,0,128,0,-1--1--1,,1|(644,1031)|
+1,77,43,69,0,0,0,0,0,128,0,-1--1--1,,1|(697,996)|
+1,78,44,70,0,0,0,0,0,128,0,-1--1--1,,1|(755,973)|
+1,79,67,12,0,0,0,0,0,128,0,-1--1--1,,1|(733,723)|
+1,80,41,30,0,0,0,0,0,128,0,-1--1--1,,1|(885,853)|
+1,81,63,30,0,0,0,0,0,128,0,-1--1--1,,1|(1228,796)|
+1,82,3,21,0,0,0,0,0,128,0,-1--1--1,,1|(1476,810)|
+1,83,41,21,0,0,0,0,0,128,0,-1--1--1,,1|(968,855)|
+1,84,55,51,0,0,0,0,0,128,0,-1--1--1,,1|(798,490)|
+1,85,68,51,0,0,0,0,0,128,0,-1--1--1,,1|(730,728)|
+1,86,63,53,0,0,0,0,0,128,0,-1--1--1,,1|(1228,832)|
+1,87,42,53,0,0,0,0,0,128,0,-1--1--1,,1|(953,888)|
+1,88,41,21,0,0,0,0,0,128,0,-1--1--1,,1|(968,855)|
+1,89,42,52,0,0,0,0,0,128,0,-1--1--1,,1|(1035,890)|
+1,90,3,52,0,0,0,0,0,128,0,-1--1--1,,1|(1477,846)|
+10,91,EBP Bronze Standard for PTSD,1367,339,62,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||128-64-0
+10,92,EBP Gold Standard for PTSD,1749,340,63,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-192-0
+10,93,"% of pts <3mo w >7 templates or \"completion\" template for DepressionPTSD",1196,91,104,30,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,94,93,92,0,0,0,0,0,128,0,-1--1--1,,1|(1476,217)|
+10,95,"% of pts <3mo w/ >1 templates for DepressionPTSD",1204,144,72,30,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,96,EBP Silver Standard for PTSD,1557,341,66,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||160-160-160
+10,97,"% of pts <3mo w >0 Templates for DepressionPTSD",1215,195,69,30,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+1,98,97,91,0,0,0,0,0,128,0,-1--1--1,,1|(1290,267)|
+1,99,95,96,0,0,0,0,0,128,0,-1--1--1,,1|(1382,244)|
+1,100,96,92,0,0,0,0,0,128,0,-1--1--1,,1|(1647,340)|
+1,101,53,96,0,0,0,0,0,128,0,-1--1--1,,1|(1379,512)|
+10,102,"HS Pts<=3mo over Total for AUD",893,556,64,20,8,3,0,0,0,0,0,0
+10,103,HS Gold Standard for AUD,1380,750,59,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-192-0
+10,104,HS Silver Standard for AUD,1214,745,62,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,105,69,102,0,0,0,0,0,64,0,-1--1--1,,1|(730,729)|
+1,106,56,102,0,0,0,0,0,64,0,-1--1--1,,1|(795,559)|
+1,107,63,104,0,0,0,0,0,64,0,-1--1--1,,1|(1228,867)|
+1,108,43,104,0,0,0,0,0,64,0,-1--1--1,,1|(1004,923)|
+1,109,43,103,0,0,0,0,0,64,0,-1--1--1,,1|(1086,924)|
+10,110,"HS Pts<=3mo over Total for OUD",896,625,64,20,8,3,0,0,0,0,0,0
+10,111,HS Gold Standard for OUD,1383,819,59,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-192-0
+10,112,HS Silver Standard for OUD,1217,814,62,20,8,3,0,40,0,0,0,0,0-0-0,0-0-0,Meiryo|10||0-0-0
+1,113,70,110,0,0,0,0,0,64,0,-1--1--1,,1|(731,738)|
+1,114,57,110,0,0,0,0,0,64,0,-1--1--1,,1|(792,624)|
+1,115,63,112,0,0,0,0,0,64,0,-1--1--1,,1|(1230,901)|
+1,116,44,112,0,0,0,0,0,64,0,-1--1--1,,1|(1062,958)|
+1,117,44,111,0,0,0,0,0,64,0,-1--1--1,,1|(1144,960)|
+10,118,"% of pts <3mo w >7 templates or \"completion\" template for AUD",1411,91,87,30,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,119,"% of pts <3mo w/ >1 templates for AUD",1419,144,72,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,120,"% of pts <3mo w >0 Templates for AUD",1430,195,69,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,121,"% of pts <3mo w >7 templates or \"completion\" template for OUD",1639,93,87,30,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,122,"% of pts <3mo w/ >1 templates for OUD",1647,146,72,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,123,"% of pts <3mo w >0 Templates for OUD",1658,197,69,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-0-0
+10,124,EBP Bronze Standard for AUD,1431,404,59,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||128-64-0
+10,125,EBP Gold Standard for AUD,1813,405,63,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-192-0
+10,126,EBP Silver Standard for AUD,1621,406,66,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||160-160-160
+1,127,126,125,0,0,0,0,0,128,0,-1--1--1,,1|(1711,405)|
+1,128,120,124,0,0,0,0,0,64,0,-1--1--1,,1|(1430,292)|
+1,129,119,126,0,0,0,0,0,64,0,-1--1--1,,1|(1515,269)|
+1,130,104,126,0,0,0,0,0,64,0,-1--1--1,,1|(1411,579)|
+1,131,118,125,0,0,0,0,0,64,0,-1--1--1,,1|(1612,248)|
+10,132,EBP Bronze Standard for OUD,1494,468,59,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||128-64-0
+10,133,EBP Gold Standard for OUD,1876,469,63,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||255-192-0
+10,134,EBP Silver Standard for OUD,1684,470,66,20,8,3,0,42,0,0,0,0,-1--1--1,0-0-0,Meiryo|10||160-160-160
+1,135,134,133,0,0,0,0,0,128,0,-1--1--1,,1|(1774,469)|
+1,136,123,132,0,0,0,0,0,64,0,-1--1--1,,1|(1579,326)|
+1,137,122,134,0,0,0,0,0,64,0,-1--1--1,,1|(1664,301)|
+1,138,112,134,0,0,0,0,0,64,0,-1--1--1,,1|(1444,646)|
+1,139,121,133,0,0,0,0,0,64,0,-1--1--1,,1|(1756,280)|
+1,140,3,111,0,0,0,0,0,128,0,-1--1--1,,1|(1482,914)|
+1,141,3,103,0,0,0,0,0,128,0,-1--1--1,,1|(1479,881)|
+10,142,"HS Pts<=3mo over Total - All",918,1232,64,20,8,3,0,0,0,0,0,0
+10,143,"HS Silver Standard - All",1224,1236,49,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||128-128-128
+10,144,"HS Gold Standard - All",1367,1241,59,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-192-0
+1,145,4,142,0,0,0,0,0,128,0,-1--1--1,,1|(1135,1148)|
+1,146,13,142,1,0,0,0,0,128,0,-1--1--1,,1|(506,1049)|
+1,147,63,143,0,0,0,0,0,64,0,-1--1--1,,1|(1233,1099)|
+1,148,3,144,0,0,0,0,0,128,0,-1--1--1,,1|(1472,1106)|
+10,149,Team Data on New Patients Referred to Psychotherapy,511,148,67,30,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0
+10,150,Start Rate Relative to Data,626,243,64,20,8,3,0,0,0,0,0,0
+1,151,149,150,0,0,0,0,0,128,0,-1--1--1,,1|(568,197)|
+10,152,Starting Psychotherapy,735,141,55,20,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|10||128-128-128
+1,153,152,150,0,0,0,0,0,128,0,-1--1--1,,1|(685,188)|
+10,154,"HS Bronze Standard - All",1066,1228,46,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||128-64-0
+1,155,4,154,0,0,0,0,0,128,0,-1--1--1,,1|(1200,1148)|
+1,156,4,143,0,0,0,0,0,128,0,-1--1--1,,1|(1277,1150)|
+1,157,4,144,0,0,0,0,0,128,0,-1--1--1,,1|(1342,1152)|
+10,158,HS Bronze Standard for Depression,1053,605,68,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||128-64-0
+1,159,13,54,0,0,0,0,0,64,0,-1--1--1,,1|(526,567)|
+1,160,13,55,0,0,0,0,0,64,0,-1--1--1,,1|(524,597)|
+1,161,13,56,0,0,0,0,0,64,0,-1--1--1,,1|(516,629)|
+1,162,13,57,0,0,0,0,0,64,0,-1--1--1,,1|(520,655)|
+10,163,HS Bronze Standard for PTSD,1053,675,68,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||128-64-0
+10,164,HS Bronze Standard for AUD,1058,740,59,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||128-64-0
+10,165,HS Bronze Standard for OUD,1058,815,59,20,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|10||128-64-0
+1,166,67,158,0,0,0,0,0,128,0,-1--1--1,,1|(812,817)|
+1,167,68,163,0,0,0,0,0,128,0,-1--1--1,,1|(807,820)|
+1,168,69,164,0,0,0,0,0,128,0,-1--1--1,,1|(805,819)|
+1,169,70,165,0,0,0,0,0,128,0,-1--1--1,,1|(806,830)|
+1,170,70,112,0,0,0,0,0,128,0,-1--1--1,,1|(884,830)|
+1,171,69,104,0,0,0,0,0,128,0,-1--1--1,,1|(882,821)|
+1,172,68,53,0,0,0,0,0,128,0,-1--1--1,,1|(888,819)|
+1,173,67,30,0,0,0,0,0,128,0,-1--1--1,,1|(891,815)|
+1,174,70,111,0,0,0,0,0,128,0,-1--1--1,,1|(969,832)|
+1,175,69,103,0,0,0,0,0,128,0,-1--1--1,,1|(966,823)|
+1,176,68,52,0,0,0,0,0,128,0,-1--1--1,,1|(966,823)|
+1,177,67,21,0,0,0,0,0,128,0,-1--1--1,,1|(974,817)|
+1,178,158,8,0,0,0,0,0,128,0,-1--1--1,,1|(1177,442)|
+1,179,163,91,0,0,0,0,0,128,0,-1--1--1,,1|(1204,512)|
+1,180,164,124,0,0,0,0,0,128,0,-1--1--1,,1|(1238,576)|
+1,181,165,132,0,0,0,0,0,128,0,-1--1--1,,1|(1270,645)|
+///---\\\
+:GRAPH OverTime
+:TITLE OverTime
+:X-MIN 0
+:SCALE
+:VAR Total Supply
+:VAR Supply Used by All Pts
+:VAR Supply Available for New Pts
+:VAR Starting Psychotherapy
+:SCALE
+:VAR Graduation Rate
+
+:GRAPH Supply_Used
+:TITLE Supply Used
+:X-AXIS Time
+:X-MIN 0
+:STACK-FILL 6
+:SCALE
+:VAR "<3mo - Supply Used by Visit1"
+:Y-MIN 0
+:VAR "<3mo - Supply Used by Visit 2-7"
+:Y-MIN 0
+:VAR "<3mo - Supply Used by Visit 8PL"
+:Y-MIN 0
+:VAR ">3mo - Supply Used by FromVisit1"
+:Y-MIN 0
+:VAR ">3mo - Supply Used by FromVisit2-7"
+:Y-MIN 0
+:VAR ">3mo - Supply Used by FromVisit8PL"
+:Y-MIN 0
+
+:GRAPH Performance_Measures_Overview
+:TITLE Performance Measures Overview
+:X-MIN 0
+:SCALE
+:VAR "HS Pts<=3mo over Total - All"
+:VAR "HS Silver Standard - All"
+:VAR "HS Gold Standard - All"
+
+:GRAPH Depression
+:TITLE % of Depression Pts Meeting Standard
+:X-MIN 0
+:SCALE
+:VAR EBP Bronze Standard for Depression
+:VAR EBP Silver Standard for Depression
+:VAR EBP Gold Standard for Depression
+:VAR HS Bronze Standard for Depression
+:VAR HS Silver Standard for Depression
+:VAR HS Gold Standard for Depression
+
+:GRAPH PTSD
+:TITLE % of PTSD Pts Meeting Standard
+:X-MIN 0
+:SCALE
+:VAR EBP Bronze Standard for PTSD
+:VAR EBP Silver Standard for PTSD
+:VAR EBP Gold Standard for PTSD
+:VAR HS Bronze Standard for PTSD
+:VAR HS Silver Standard for PTSD
+:VAR HS Gold Standard for PTSD
+
+:GRAPH AUD
+:TITLE % of AUD Pts Meeting Standard
+:X-MIN 0
+:SCALE
+:VAR EBP Bronze Standard for AUD
+:VAR EBP Silver Standard for AUD
+:VAR EBP Gold Standard for AUD
+:VAR HS Bronze Standard for AUD
+:VAR HS Silver Standard for AUD
+:VAR HS Gold Standard for AUD
+
+:GRAPH OUD
+:TITLE % of OUD Pts Meeting Standard
+:X-MIN 0
+:SCALE
+:VAR EBP Bronze Standard for OUD
+:VAR EBP Silver Standard for OUD
+:VAR EBP Gold Standard for OUD
+:VAR HS Bronze Standard for OUD
+:VAR HS Silver Standard for OUD
+:VAR HS Gold Standard for OUD
+:L<%^E!@
+1:PSY-Dec20.vdf
+9:PSY-Dec20
+22:$,Dollar,Dollars,$s
+22:Hour,Hours
+22:Month,Months
+22:Person,People,Persons
+22:Unit,Units
+22:Week,Weeks
+22:Year,Years
+22:Day,Days
+23:0
+15:0,0,0,0,0,0
+19:70,3
+27:2,
+34:0,
+4:Time
+5:Cohort Ratio
+35:Date
+36:YYYY-MM-DD
+37:2000
+38:1
+39:1
+40:3
+41:0
+42:1
+24:-500
+25:100
+26:100
